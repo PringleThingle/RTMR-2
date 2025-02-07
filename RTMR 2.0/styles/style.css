@@ -2,7 +2,8 @@
     padding:3px;
     margin:3px;
     display:block;
-    border:1px solid #000;
+    border:1px solid #6c3e1f;
+    background-color:rgb(18, 18, 18);
     }
 
     /* body > *:hover {
@@ -12,6 +13,7 @@
 
     html, * { 
         font-size:10px; 
+        background-color:rgb(18, 18, 18);
     }
 
     script,
@@ -59,7 +61,7 @@
     display:block;
     width:100%;
     height:fit-content;
-    background-color:#fff;
+    /* background-color:#fff; */
     background-image:url('../assets/header_large.jpg');
     background-position:center right;
     background-repeat:no-repeat;
@@ -72,7 +74,7 @@
     height:65px;
     position:sticky;
     top:0px;
-    background-color:#555;
+    background-color:#a6a1a1;
     z-index:50;
     }
 
@@ -108,7 +110,7 @@
     }
     main > article, main > article > section, main > article >
     div, .comments, .comments aside {
-    border:1px solid #000;
+    border:1px solid #6c3e1f;
     margin:2px;
     }
 
@@ -134,7 +136,7 @@
     article > h1 {
     flex:1 100%;
     top: 75px;
-    background-color: #fff;
+    background-color: #6c3e1f;
     z-index: 20;
     }
 

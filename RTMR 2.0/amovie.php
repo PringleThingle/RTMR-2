@@ -15,9 +15,14 @@ $page = new Page(3);
 </ul></nav>
 <main>
 <?php
-if(util::posted($_POST['title']) && util::posted($_POST['content'])) {
+if(util::posted($_POST['title']) && util::posted($_POST['description'])) {
+	$mid=util::sanInt($_POST['mid']); 
 	$title=util::sanStr($_POST['title']);
 	$content=util::sanStr($_POST['description']);
+	$posterLink=util::sanStr($_POST['posterLink']);
+	$director=util::sanStr($_POST['director']);
+
+	echo "Poster Link: " . htmlspecialchars($posterLink);
 	$movietoadd=new Movie();
 	$result=$movietoadd->addMovie($mid,$title,$description,$posterLink,$director);
 	if($result['insert']>0) {

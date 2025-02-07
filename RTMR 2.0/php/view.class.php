@@ -1,5 +1,5 @@
 <?php
-define('APPNAME', "My Local Theatre");
+define('APPNAME', "Rat Town Movie Reviews");
 define('APPLOGO', 'assets\logowithtext.png'); 
 
 
@@ -17,9 +17,7 @@ class view
 
         <head>
             <?php
-            ini_set('display_errors', '1');
-            ini_set('display_startup_errors', '1');
-            error_reporting(E_ALL);
+
             ?>
             <meta charset="UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -28,7 +26,7 @@ class view
             <!-- <link rel="stylesheet" type="text/css" media="screen and (max-width:639px)" href="" />
             <link rel="stylesheet" type="text/css" media="screen and (min-width:640px)" href="" /> -->
             <!-- <link rel="stylesheet" type="text/css" media="print" href="../css/print.css" /> -->
-            <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+            <link rel="icon" type="image/x-icon" href="assets/ratticusgood.ico">
             <title><?php echo $pagename . " - " . APPNAME; ?></title>
     </head>
 

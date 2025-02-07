@@ -87,17 +87,51 @@ class MovieCRUD {
 	/**************
 	* adds a new Article, returns 1 on success, error message on fail
 	**************/		
-	public function addMovie($mid, $title, $description, $posterLink, $director) {
-		$this->sql="insert into movieInfo (movieID,movieTitle,movieDescription, posterLink, directorID) values (?,?,?);";
+
+	public function addMovie($mid, $title, $description, $posterLink, $directorID) {
+		// Step 1: Validate that directorID exists in directorInfo
+		$this->sql = "SELECT directorID FROM directorInfo WHERE directorID = ?";
 		$this->stmt = self::$db->prepare($this->sql);
-		$this->stmt->bind_param("isssi",$mid,$title,$description,$posterLink,$director);
+		$this->stmt->bind_param("i", $directorID);
 		$this->stmt->execute();
-		if($this->stmt->affected_rows!=1) {
-			return "Could not add movie<br />";
+		$result = $this->stmt->get_result();
+	
+		if ($result->num_rows === 0) {
+			return "Error: The provided directorID ($directorID) does not exist in directorInfo.<br />";
+		}
+	
+		// Step 2: Insert the movie with the given directorID
+		$this->sql = "INSERT INTO movieInfo (movieID, title, movieDescription, posterLink, directorID) 
+					  VALUES (?, ?, ?, ?, ?)";
+		$this->stmt = self::$db->prepare($this->sql);
+		$this->stmt->bind_param("isssi", $mid, $title, $description, $posterLink, $directorID);
+		$this->stmt->execute();
+	
+		if ($this->stmt->affected_rows !== 1) {
+			return "Could not add movie.<br />";
 		} else {
-			return $this->stmt->affected_rows;
-		}		
+			return "Movie successfully added!";
+		}
 	}
+	
+
+
+
+
+
+
+
+	// public function addMovie($mid, $title, $description, $posterLink, $director) {
+	// 	$this->sql="insert into movieInfo (movieID,movieTitle,movieDescription, posterLink, directorID) values (?,?,?,?,?);";
+	// 	$this->stmt = self::$db->prepare($this->sql);
+	// 	$this->stmt->bind_param("isssi",$mid,$title,$description,$posterLink,$director);
+	// 	$this->stmt->execute();
+	// 	if($this->stmt->affected_rows!=1) {
+	// 		return "Could not add movie<br />";
+	// 	} else {
+	// 		return $this->stmt->affected_rows;
+	// 	}		
+	// }
 
 	/**************
 	* updates existing article, returns 1 on success, error message on fail

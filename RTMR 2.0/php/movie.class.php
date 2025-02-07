@@ -46,7 +46,10 @@ class Movie {
 	/**************
 	* Setter for Movie ID
 	**************/
-	private function setID($mid){ $this->mid=$mid; }
+	private function setID($mid) {
+		$this->mid = $mid;
+		return true; 
+	}
 
 	/**************
 	* Setter for Director ID 
@@ -210,13 +213,18 @@ class Movie {
 		$messages="";
 		if($this->setID($mid)) {
 			$target=new MovieCRUD();
+			$this->setID($mid); 
 			$this->setTitle($title);
 			$this->setDescription($description);
 			$this->setPosterLink($posterLink);
 			$this->setDirectorID($director);
 			$insert=$target->addMovie($this->getID(), $this->getTitle(), $this->getDescription(), $this->getPosterLink(), $this->getDirectorID());
 			if($insert!=1) { $messages.=$insert;$insert=0; }
-		} else { $messages="Invalid Poster<br>"; }
+		} else { 
+			die("setID() failed for mid: " . htmlspecialchars($mid));
+			$messages="Invalid Poster<br>"; 
+
+		}
 		$result=['insert'=>$insert,'messages'=>$messages];
 		return $result;
 	}

@@ -16,9 +16,12 @@ $page = new Page(3);
 
 <main>
 	<form method="post" action="amovie.php">
-	<fieldset><legend>Add Article</legend>
+	<fieldset><legend>Add Movie</legend>
+	<label for="mid">Movie ID </label><input type="int" name="mid" id="mid" required size="8" /><br />
 	<label for="title">Title </label><input type="text" name="title" id="title" required size="40" /><br />
-	<label for="content">Description</label><textarea name="content" id="content" cols="60" rows="8" required></textarea><br />
+	<label for="description">Description</label><textarea name="description" id="description" cols="60" rows="8" required></textarea><br />
+	<label for="posterLink">Poster Link</label><input name="posterLink" id="posterLink" required size = "8"/></input><br />
+	<label for="director">Director ID</label><input name="director" id="director" required size = "8"/></input><br />
 	<button type="submit">Add Article</button>
 	</fieldset>
 	</form>
