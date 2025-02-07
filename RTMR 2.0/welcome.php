@@ -1,6 +1,7 @@
 <!doctype html>
 <head>
 <?php
+
 require_once("php/page.class.php");
 require_once("php/view.class.php");
 $page = new Page(0);

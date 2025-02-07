@@ -15,10 +15,10 @@ $page = new Page(3);
 </ul></nav>
 
 <main>
-	<form method="post" action="aarticle.php">
+	<form method="post" action="amovie.php">
 	<fieldset><legend>Add Article</legend>
 	<label for="title">Title </label><input type="text" name="title" id="title" required size="40" /><br />
-	<label for="content">Content</label><textarea name="content" id="content" cols="60" rows="8" required></textarea><br />
+	<label for="content">Description</label><textarea name="content" id="content" cols="60" rows="8" required></textarea><br />
 	<button type="submit">Add Article</button>
 	</fieldset>
 	</form>

@@ -17,7 +17,7 @@ class User {
 	* dob - user date of birth
 	* usertype - type of user (user, anonymous, suspended or admin)
 	***************/
-	private $userid, $username,$userhash, $firstname, $surname, $lastsession, $email, $dob, $usertype;
+	private $userid, $username, $userhash, $email, $userlevel, $lastsession;
 	
 	/**************
 	* Creates a default user, in this implementation users are
@@ -26,9 +26,8 @@ class User {
 	public function __construct() {
 		$this->userid=-1;
 		$this->username="Anon";
-		$this->usertype=0;
+		$this->userlevel=0;
 		$this->userhash=new UserHash();
-		$this->dob = new DOB();
 	}
 	
 	/**************
@@ -46,22 +45,6 @@ class User {
 		return $message;	
 	}
 	
-	private function setFirstname($firstname) {
-		$message="";
-		if(util::valStr($firstname)) {
-			$this->firstname=$firstname;
-		} else {$message="Invalid Firstname<br />";}
-		return $message;
-	}
-	
-	private function setSurname($surname) {
-		$message="";
-		if(util::valStr($surname)) {
-			$this->surname=$surname;
-		} else {$message="Invalid Surname<br />";}
-		return $message;
-	}
-	
 	private function setEmail($email) {
 		$message="";
 		if(util::valEmail($email)) {
@@ -70,21 +53,12 @@ class User {
 		return $message;
 	}
 	
-	private function setDOB($dob) {
-		$message="";
-		if(!$this->dob->setDOB($dob))
-		{ $message.="Date is not correct<br />"; }
-		if($this->dob->getAge()<16)
-		{ $message.= "User must be 16 years or older<br />";}	
-		return $message;
-	}
-	
 	private function setSession($session) {
 		$this->lastsession=$session;
 	}
 	
-	private function setUsertype($usertype) {
-		$this->usertype=$usertype;
+	private function setUserLevel($userlevel) {
+		$this->userlevel=$userlevel;
 	}
 	
 	private function setPass($password) {
@@ -102,12 +76,9 @@ class User {
 	**************/
 	public function getUserid() { return $this->userid; }
 	public function getUsername() { return $this->username; }
-	public function getFirstname() { return $this->firstname; }
-	public function getSurname() { return $this->surname; }
 	public function getEmail() { return $this->email; }
-	public function getDOB($format="Y-m-d") { return $this->dob->format($format); }
 	public function getSession() { return $this->lastsession; }
-	public function getUsertype() { return $this->usertype; }
+	public function getUserLevel() { return $this->userlevel; }
 
 	public function getUserByName($username) {
 		$haveuser=false;
@@ -115,15 +86,12 @@ class User {
 		$data=$source->getUserByName($username);
 		if(count($data)==1) {
 			$user=$data[0];
-			$this->setUserid($user["userid"]);
+			$this->setUserid($user["userID"]);
 			$this->setUsername($user["username"]);
-			$this->setFirstname($user["firstname"]);
-			$this->setSurname($user["surname"]);
 			$this->setSession($user["lastsession"]);
 			$this->setEmail($user["email"]);
-			$this->setDOB($user["dob"]);
-			$this->setUsertype($user["usertype"]);
-			$this->userhash->initHash($user["userpass"]);
+			$this->setUserlevel($user["userLevel"]);
+			$this->userhash->initHash($user["hashedPass"]);
 			$haveuser=true;
 		}
 		return $haveuser;
@@ -135,15 +103,12 @@ class User {
 		$data=$source->getUserById($userid);
 		if(count($data)==1) {
 			$user=$data[0];
-			$this->setUserid($user["userid"]);
+			$this->setUserid($user["userID"]);
 			$this->setUsername($user["username"]);
-			$this->setFirstname($user["firstname"]);
-			$this->setSurname($user["surname"]);
-			$this->setSession($user["lastsession"]);
+			$this->setSession($user["lastSession"]);
 			$this->setEmail($user["email"]);
-			$this->setDOB($user["dob"]);
-			$this->setUsertype($user["usertype"]);
-			$this->userhash->initHash($user["userpass"]);
+			$this->setUserLevel($user["userLevel"]);
+			$this->userhash->initHash($user["hashedPass"]);
 			$haveuser=true;
 		} 
 		return $haveuser;
@@ -187,18 +152,15 @@ class User {
 	/**************
 	* Registers a user with details they provided
 	**************/
-	public function registerUser($username,$password, $firstname,$surname, $email, $dob) {
+	public function registerUser($username, $password, $email) {
 		$insert=0;
 		$messages="";
 		$target=new UserCRUD();
 		$messages.=$this->setUsername($username);
-		$messages.=$this->setFirstname($firstname);
-		$messages.=$this->setSurname($surname);
 		$messages.=$this->setPass($password);
 		$messages.=$this->setEmail($email);
-		$messages.=$this->setDOB($dob);
 		if($messages=="") {
-			$insert=$target->storeNewUser($this->getUsername(),$this->getFirstname(),$this->getSurname(),$this->userhash->getHash(),$this->getEmail(), $this->getDOB());
+			$insert=$target->storeNewUser($this->getUsername(),$this->userhash->getHash(),$this->getEmail());
 			if($insert!=1) { $messages.=$insert;$insert=0; }
 		}
 		$result=['insert' => $insert,'messages' => $messages];
@@ -208,21 +170,18 @@ class User {
 	/**************
 	* Updates an existing users details
 	**************/
-	public function updateUser($username,$firstname,$surname,$password,$email,$dob,$usertype, $userid) {		
+	public function updateUser($username,$password,$email,$userlevel,$userid) {		
 		$update=0;
 		$messages="";
 		$found=$this->getUserById($userid);
 		$target=new UserCRUD();
 		if($found) {
 			if(util::posted($username)){$messages.=$this->setUsername($username);}
-			if(util::posted($firstname)){$messages.=$this->setFirstname($firstname);}
-			if(util::posted($surname)){$messages.=$this->setSurname($surname);}
 			if(util::posted($password)){$messages.=$this->setPass($password);}
 			if(util::posted($email)){$messages.=$this->setEmail($email);}
-			if(util::posted($dob)){$messages.=$this->setDOB($dob);}
-			if(util::posted($usertype)){$messages.=$this->setUsertype($usertype);}
+			if(util::posted($userlevel)){$messages.=$this->setUserLevel($userlevel);}
 			if($messages=="") {
-				$update=$target->updateUser($this->getUsername(), $this->getFirstname(), $this->getSurname(), $this->userhash->getHash(), $this->getEmail(), $this->getDOB(),$this->getUsertype(), $userid);
+				$update=$target->updateUser($this->getUsername(), $this->userhash->getHash(), $this->getEmail(), $this->getUserLevel(), $userid);
 				if($update!=1) {$messages=$update;$update=0;}
 			}			
 		}
@@ -237,11 +196,9 @@ class User {
 	public function __toString() {
 		$output="";
 		$output.="User : ".$this->getUsername()."<br />";
-		$output.="Name : ".$this->getFirstname()." ".$this->getSurname()."<br />";
 		$output.="Email : ".$this->getEmail()."<br />";
-		$output.="DOB : ".$this->getDOB()."<br />";
 		$typedesc="Anonymous";
-		switch($this->getUsertype()) {
+		switch($this->getUserLevel()) {
 			case 1: $typedesc="Suspended";
 					break;
 			case 2: $typedesc="User";

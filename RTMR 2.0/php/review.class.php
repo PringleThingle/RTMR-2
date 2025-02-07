@@ -1,25 +1,26 @@
 <?php
 
-require_once("articlecrud.class.php");
+require_once("moviecrud.class.php");
 require_once("user.class.php");
-require_once("commentcrud.class.php");
+require_once("reviewcrud.class.php");
 require_once("util.class.php");
 
 
 /**************
 * Article class
 **************/
-class Comment {
+class Review {
 	/***************
-	* aid - serial article id
-	* cid - serial comment id
-	* cdate - instance of DateTime, when comment was created
-	* cauthor - comment author, instance of User
-	* ctext - main body of article textdomain
-	* comments - an array for instances of Comment
+	* mid - serial movie id
+	* rid - serial review id
+	* rating - user rating for a movie
+	* rdate - instance of DateTime, when review was created
+	* rauthor - review author, instance of User
+	* rtext - main body of review textdomain
+	* reviews - an array for instances of Review
 	***************/
-	private $aid, $cid, $cdate, $cauthor,$ctext;
-	private $comments=[];
+	private $mid, $rid, $rating, $rdate, $rauthor,$rtext;
+	private $reviews=[];
 	
 	/**************
 	* Creates a 'blank' comment, in this implementation comments are
@@ -29,24 +30,24 @@ class Comment {
 	* PHP's inability to handle function overloading for constructors
 	**************/
 	public function __construct() {
-		$this->cid=-1;
-        $this->aid=-1;
-		$this->cdate=new DateTime();
-		$this->cauthor=new User();
-		$this->ctext="";
+		$this->mid=-1;
+        $this->rid=-1;
+		$this->rdate=new DateTime();
+		$this->rauthor=new User();
+		$this->rtext="";
 	}
 	
 	/**************
 	* Setter for Comment ID
 	**************/
-    private function setCID($cid){ $this->cid=$cid; }
-	private function setAID($aid){ $this->aid=$aid; }
+    private function setRID($rid){ $this->rid=$rid; }
+	private function setMID($mid){ $this->mid=$mid; }
 	
 	/**************
 	* Setter for datetime, accepts a date in string format
 	**************/	
-	private function setCDate($date) { 
-		$this->cdate=DateTime::createFromFormat("Y-m-d H:i:s", $date);
+	private function setRDate($date) { 
+		$this->rdate=DateTime::createFromFormat("Y-m-d H:i:s", $date);
 		}
 		
 	/**************
@@ -58,13 +59,13 @@ class Comment {
 	private function setAuthor($author) {
 		$haveuser = false;
 		if ($author instanceof User) {
-			$this->cauthor = $author;
+			$this->rauthor = $author;
 			$haveuser = true;
 		} else {
 			$finduser = new User();
 			$haveuser = $finduser->getUserById($author);
 			if ($haveuser) {
-				$this->cauthor = $finduser;
+				$this->rauthor = $finduser;
 			} else {
 			}
 		}
@@ -74,33 +75,33 @@ class Comment {
 	/**************
 	* Setter for comment text, uses string sanitiser method
 	**************/
-	private function setText($text) {$this->ctext=util::sanStr($text);}
+	private function setText($text) {$this->rtext=util::sanStr($text);}
 	
 	/**************
 	* Remove all current comments in comments array
 	**************/
-	public function clearComments() {$this->comments=[];}
+	public function clearReviews() {$this->reviews=[];}
 	
 	/**************
 	* Class getters
 	**************/
-	public function getCID() { return $this->cid; }
-    public function getAID() { return $this->aid; }
-	public function getCDate() { return $this->cdate; }
-	public function getAuthor() { return $this->cauthor; }
-	public function getText() { return $this->ctext; }
+	public function getRID() { return $this->rid; }
+    public function getMID() { return $this->mid; }
+	public function getRDate() { return $this->rdate; }
+	public function getAuthor() { return $this->rauthor; }
+	public function getText() { return $this->rtext; }
 	
 	/**************
 	* Uses commentCRUD to retrieve a recordset of comments as an associative array
 	* instantiates Comment for each row and adds to the comments array
 	**************/
-	public function getCommentsForArticle($aid) {
+	public function getReviewsForMovie($mid) {
         $havecomments=false;
-		$source=new CommentCRUD();
-		$data=$source->getCommentsForArticle($aid);
+		$source=new ReviewCRUD();
+		$data=$source->getReviewsForMovie($mid);
 		if(count($data)>=1) {
-            foreach ($data as $comment) {
-                $this->initComment($comment);
+            foreach ($data as $review) {
+                $this->initReview($review);
             }
 			$havecomments=true;
 		}
@@ -111,13 +112,13 @@ class Comment {
 	* returns a comment from a comment ID ($cid)
 	**************/	
 
-    public function getCommentByID($cid) {
-		$cid = (int)$cid;
+    public function getReviewByID($rid) {
+		$rid = (int)$rid;
         $havecomment = false;
-        $source=new CommentCRUD();
-        $data=$source->getCommentByID($cid);
+        $source=new ReviewCRUD();
+        $data=$source->getReviewByID($rid);
         if($data) {
-            $this->initComment($data);
+            $this->initReview($data);
             $havecomment=true;
         }
 		return $havecomment;
@@ -126,12 +127,12 @@ class Comment {
 	/**************
 	* sets comment's attributes from a retrieved associative array of comments
 	**************/
-	public function initComment($article) {
-		$this->setCID($article["commentID"]);
-        $this->setAID($article["blogID"]);
-		$this->setCDate($article["commenttime"]);
-		$this->setAuthor($article["commentposter"]);
-		$this->setText($article["commenttext"]);	
+	public function initReview($movie) {
+		$this->setRID($movie["reviewID"]);
+        $this->setMID($movie["movieID"]);
+		$this->setRDate($movie["reviewTime"]);
+		$this->setAuthor($movie["reviewPoster"]);
+		$this->setText($movie["reviewText"]);	
 	}
 	
 	/**************
@@ -142,8 +143,8 @@ class Comment {
 	* returns comment ID if successful, 0/false if unsuccessful with an
 	* error message as an associative array
 	**************/	
-public function addComment($author, $text, $blogID) {
-    $cid = 0;
+public function addReview($author, $text, $movieID) {
+    $rid = 0;
     $insert = 0;
     $messages = "";
 
@@ -152,23 +153,23 @@ public function addComment($author, $text, $blogID) {
     }
 
     if ($this->setAuthor($author)) {
-        $target = new CommentCRUD();
+        $target = new ReviewCRUD();
         $this->setText($text);
 
-        $insert = $target->addComment($this->getText(), $this->getAuthor()->getUserid(), $blogID);
+        $insert = $target->addReview($this->getText(), $this->getAuthor()->getUserid(), $movieID);
 
         if ($insert !== 1) { 
             $messages .= "Add comment failed."; 
             $insert = 0;
         } else {
-            $resultset = $target->getLastUserComment($this->getAuthor()->getUserid());
+            $resultset = $target->getLastUserReview($this->getAuthor()->getUserid());
             if (count($resultset) == 1) {
-                $this->setCID($resultset[0]["commentID"]);
-                $this->setAID($resultset[0]["blogID"]);
-                $this->setCDate($resultset[0]["commenttime"]);
+                $this->setRID($resultset[0]["reviewID"]);
+                $this->setMID($resultset[0]["movieID"]);
+                $this->setRDate($resultset[0]["reviewTime"]);
                 $insert = 1;
             } else {
-                $messages .= "Failed to retrieve the last added comment.";
+                $messages .= "Failed to retrieve the last added review.";
             }
         }
     } else { 
@@ -183,23 +184,23 @@ public function addComment($author, $text, $blogID) {
 	* updates a comment when a user edits a comment
 	**************/	
 
-	public function updateComment($content, $cid) {
+	public function updateReview($content, $rid) {
 		$messages = "";
 		$update = 0;
-		$found = $this->getCommentById($cid);
-		$target = new CommentCRUD();
+		$found = $this->getReviewById($rid);
+		$target = new ReviewCRUD();
 	
 		if ($found) {
 			if (util::posted($content)) {
 				$messages .= $this->setText($content);
 			}
 			if ($messages == "") {
-				$updateResult = $target->updateComment($this->getText(), $cid);
+				$updateResult = $target->updateReview($this->getText(), $rid);
 				$update = $updateResult['update'];
 				$messages = $updateResult['messages'];
 			}
 		} else {
-			$messages = "Comment not found.";
+			$messages = "Review not found.";
 		}
 	
 		$result = ['update' => $update, 'messages' => $messages];
@@ -209,18 +210,18 @@ public function addComment($author, $text, $blogID) {
 	/**************
 	* deletes a comment based on a comment ID ($cid)
 	**************/	
-	public function deleteComment($cid) {
+	public function deleteReview($rid) {
 		$messages = "";
 		$delete = 0;
-		$found = $this->getCommentById($cid); 
-		$target = new CommentCRUD();
+		$found = $this->getReviewById($rid); 
+		$target = new ReviewCRUD();
 	
 		if ($found) {
-			$deleteResult = $target->deleteComment($cid);
+			$deleteResult = $target->deleteReview($rid);
 			$delete = $deleteResult['delete'];
 			$messages = $deleteResult['messages'];
 		} else {
-			$messages = "Comment not found.";
+			$messages = "Review not found.";
 		}
 	
 		return ['delete' => $delete, 'messages' => $messages];
@@ -231,16 +232,16 @@ public function addComment($author, $text, $blogID) {
 	* returns comments in an array, for use when formatting an article into an array
 	**************/	
 	public function toArray() {
-		$comments=[];
+		$reviews=[];
 		
-		foreach($this->comments as $comment) {
-			array_push($comments, $comment->toArray());
+		foreach($this->reviews as $review) {
+			array_push($reviews, $review->toArray());
 		}
 		
 		$outarray=array(
-			'cid' => htmlentities($this->getCID()),
-			'aid' => htmlentities($this->getAID()),
-			'date' => htmlentities($this->getCDate()->format("Y-m-d H:i:s")),
+			'rid' => htmlentities($this->getRID()),
+			'mid' => htmlentities($this->getMID()),
+			'date' => htmlentities($this->getRDate()->format("Y-m-d H:i:s")),
 			'username' => htmlentities($this->getAuthor()->getUsername()),
 			'content' => htmlentities($this->getText()) 
 		);

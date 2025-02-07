@@ -22,6 +22,6 @@ echo $userlist;
 ?>
 <button id="edituserbutton" type="submit">Edit User</button>
 </form>
-<p><a href="addarticle.php">Add New Article</a></p>
+<p><a href="addmovie.php">Add New Movie</a></p>
 </body>
 </html>

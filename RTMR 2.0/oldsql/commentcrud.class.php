@@ -1,6 +1,6 @@
 <?php
 require_once("db.php");
-class CommentCRUD {
+class ReviewCRUD {
 	private static $db;
 	private $sql, $stmt;
 	
@@ -12,10 +12,10 @@ class CommentCRUD {
 	/**************
 	* Returns an array of comments associated with a specific article ID ($aid)
 	**************/	
-	public function getCommentsForArticle($aid, $style=MYSQLI_ASSOC) {
-		$this->sql="select * from commenttable where blogID = ?";
+	public function getReviewsForMovie($mid, $style=MYSQLI_ASSOC) {
+		$this->sql="select * from movieReviews where movieID = ?";
 		$this->stmt = self::$db->prepare($this->sql);
-		$this->stmt->bind_param("i",$aid);
+		$this->stmt->bind_param("i",$mid);
 		$this->stmt->execute();
 		$result = $this->stmt->get_result();
 		$resultset=$result->fetch_all($style);
@@ -25,13 +25,13 @@ class CommentCRUD {
 	/**************
 	* Returns a comment from a specific comment ID ($cid)
 	**************/	
-	public function getCommentById($cid, $style = MYSQLI_ASSOC) {
-		$cid = (int)$cid;
+	public function getReviewById($rid, $style = MYSQLI_ASSOC) {
+		$rid = (int)$rid;
 
-		$this->sql = "SELECT * FROM commenttable WHERE commentID = ?";
+		$this->sql = "SELECT * FROM movieReviews WHERE reviewID = ?";
 		$this->stmt = self::$db->prepare($this->sql);
 		
-		$this->stmt->bind_param("i", $cid);
+		$this->stmt->bind_param("i", $rid);
 	
 		$this->stmt->execute();
 	
@@ -45,15 +45,15 @@ class CommentCRUD {
 	/**************
 	* adds a comment into the database, returns 1 on success, 0 on failure
 	**************/	
-    public function addComment($text, $poster, $blogID) {
-        $this->sql = "INSERT INTO commenttable (commenttext, commentposter, blogID) VALUES (?, ?, ?)";
+    public function addReview($text, $poster, $movieID) {
+        $this->sql = "INSERT INTO movieReviews (reviewText, reviewPoster, movieID) VALUES (?, ?, ?)";
         $this->stmt = self::$db->prepare($this->sql);
     
         if (!$this->stmt) {
             return 0; 
         }
     
-        $this->stmt->bind_param("sii", $text, $poster, $blogID);
+        $this->stmt->bind_param("sii", $text, $poster, $movieID);
     
         if (!$this->stmt->execute()) {
             return 0; 
@@ -65,8 +65,8 @@ class CommentCRUD {
 	/**************
 	* Returns the last comment a specific user made
 	**************/	
-	public function getLastUserComment($poster, $style=MYSQLI_ASSOC) {
-		$this->sql="select * from commenttable where commentposter=? order by commenttime desc limit 1";
+	public function getLastUserReview($poster, $style=MYSQLI_ASSOC) {
+		$this->sql="select * from movieReviews where reviewPoster=? order by reviewTime desc limit 1";
 		$this->stmt = self::$db->prepare($this->sql);
 		$this->stmt->bind_param("i",$poster);
 		$this->stmt->execute();
@@ -78,8 +78,8 @@ class CommentCRUD {
 	/**************
 	* Returns the last comment that was made
 	**************/	
-    public function getLastComment($style=MYSQLI_ASSOC) {
-		$this->sql="select * from commenttable order by commenttime desc limit 1";
+    public function getLastReview($style=MYSQLI_ASSOC) {
+		$this->sql="select * from movieReviews order by reviewTime desc limit 1";
 		$this->stmt = self::$db->prepare($this->sql);
 		$this->stmt->execute();
 		$result = $this->stmt->get_result();
@@ -90,15 +90,15 @@ class CommentCRUD {
 	/**************
 	* Updates a comment in the database when a user edits 
 	**************/	
-	public function updateComment($text, $cid) {
-		$this->sql = "UPDATE commenttable SET commenttext=? WHERE commentID=?;";
+	public function updateReview($text, $rid) {
+		$this->sql = "UPDATE movieReviews SET reviewText=? WHERE reviewID=?;";
 		$this->stmt = self::$db->prepare($this->sql);
 	
 		if (!$this->stmt) {
 			return ['update' => 0, 'messages' => "Prepare failed: " . self::$db->error];
 		}
 	
-		$this->stmt->bind_param("si", $text, $cid);
+		$this->stmt->bind_param("si", $text, $rid);
 		$result = $this->stmt->execute();
 	
 		if ($result) {
@@ -111,15 +111,15 @@ class CommentCRUD {
 	/**************
 	* Deletes existing article, returns 1 on success, error message on fail
 	**************/		
-	public function deleteComment($cid) {
-		$this->sql = "DELETE FROM commenttable WHERE commentID = ?;";
+	public function deleteReview($rid) {
+		$this->sql = "DELETE FROM movieReviews WHERE reviewID = ?;";
 		$this->stmt = self::$db->prepare($this->sql);
 	
 		if (!$this->stmt) {
 			return ['delete' => 0, 'messages' => "Prepare failed: " . self::$db->error];
 		}
 	
-		$this->stmt->bind_param("i", $cid);
+		$this->stmt->bind_param("i", $rid);
 		$result = $this->stmt->execute();
 	
 		if ($result) {

@@ -8,13 +8,13 @@
 <?php
 require_once("php/page.class.php");
 require_once("php/user.class.php");
-require_once("php/article.class.php");
+require_once("php/movie.class.php");
 
 $page = new Page(3);
-$editarticle = new Article();
+$editmovie = new Movie();
 #$edituser = new User();
-$editid = isset($_GET['aid']) ? $_GET['aid'] : null;
-$found=$editarticle->getArticleById($editid);
+$editid = isset($_GET['mid']) ? $_GET['mid'] : null;
+$found=$editmovie->getMovieById($editid);
 
 ?>
 <nav>

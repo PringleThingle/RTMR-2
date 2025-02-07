@@ -4,7 +4,7 @@
 require_once("php/page.class.php");
 require_once("php/view.class.php");
 $page = new Page();
-$pagename = "Articles";
+$pagename = "Movie Reviews";
 view::showHead($pagename);
 view::showHeader($pagename);
 ?>
@@ -17,8 +17,8 @@ view::showHeader($pagename);
 <main>
 <?php
 $now=new DateTime();
-$page->getArticles($now->format("Y-m-d H:i:s O"), 2, "DESC");
-echo $page->displayArticles();
+$page->getMovies($now->format("Y-m-d H:i:s O"), 2, "DESC");
+echo $page->displayMovies();
 ?>
 </main>
 
@@ -30,7 +30,7 @@ echo $page->displayArticles();
 <script hidden=True>
 document.onreadystatechange = function(){
 	if(document.readyState=="complete") {
-		var articlehandler=new Article("main");
+		var moviehandler=new Movie("main");
 		var mytouchhandler=new TouchScaler(["#mainheader","nav","main"]);
 	}
 }

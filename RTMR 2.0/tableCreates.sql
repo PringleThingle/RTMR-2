@@ -26,22 +26,25 @@ PRIMARY KEY (directorID)
 
 CREATE TABLE movieInfo(
 movieID INT(9) NOT NULL,
-title VARCHAR(100),
+title text,
 rating DECIMAL(3,1),
-movieDescription VARCHAR(1000),
-posterLink VARCHAR(300),
-directorID INT(7),
+movieDescription text,
+movieDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+posterLink text,
+directorID INT(7) DEFAULT "NO DIRECTOR",
 PRIMARY KEY (movieID),
 FOREIGN KEY (directorID) REFERENCES directorInfo(directorID)
 );
 
 CREATE TABLE movieReviews(
 reviewID INT(9) NOT NULL AUTO_INCREMENT,
-reviewText VARCHAR(300),
+reviewText text,
 userRating DECIMAL(3,1),
 movieID INT(9) NOT NULL,
-userID INT NOT NULL,
+reviewPoster int(5) DEFAULT NULL,
+reviewTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (reviewID),
+KEY reviewPoster (reviewPoster),
 FOREIGN KEY (movieID) REFERENCES movieInfo(movieID),
-FOREIGN KEY (userID) REFERENCES userInfo(userID)
+CONSTRAINT reviewPoster FOREIGN KEY (reviewPoster) REFERENCES userInfo (userID) ON DELETE SET NULL ON UPDATE CASCADE
 );

@@ -16,6 +16,11 @@ class view
         <html lang="en-GB" dir="ltr">
 
         <head>
+            <?php
+            ini_set('display_errors', '1');
+            ini_set('display_startup_errors', '1');
+            error_reporting(E_ALL);
+            ?>
             <meta charset="UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />

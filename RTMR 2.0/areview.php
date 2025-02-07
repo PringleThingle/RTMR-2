@@ -4,14 +4,14 @@
 <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
-<h1>Add Comment</h1>
+<h1>Add Review</h1>
 <?php
 require_once("php/page.class.php");
 require_once("php/util.class.php");
-require_once("php/comment.class.php");
+require_once("php/review.class.php");
 
 $page = new Page(2);
-$comment = new Comment();
+$comment = new Review();
 ?>
 <nav><ul class="navbar">
 <?php echo $page->getMenu(); ?>
@@ -20,15 +20,15 @@ $comment = new Comment();
 <main>
 <?php
 
-if(util::posted($_POST['aid']) && util::posted($_POST['commenttext'])) {
-	$aid=util::sanInt($_POST['aid']);
-    $text=util::sanStr($_POST['commenttext']);
-	$commenttoadd=new Comment();
-    $result = $commenttoadd->addComment($page->getUser()->getUserid(), $text, $aid);
+if(util::posted($_POST['mid']) && util::posted($_POST['reviewText'])) {
+	$mid=util::sanInt($_POST['mid']);
+    $text=util::sanStr($_POST['reviewText']);
+	$reviewtoadd=new Review();
+    $result = $reviewtoadd->addReview($page->getUser()->getUserid(), $text, $mid);
 
     if ($result['insert'] == 1) { 
-        echo "<h2>Comment Added</h2>";
-        echo $page->displayArticles();
+        echo "<h2>Review Added</h2>";
+        echo $page->displayMovies();
     } else { 
         echo "<h2>Add Failed</h2>";
         if (is_array($result) && isset($result['messages'])) {

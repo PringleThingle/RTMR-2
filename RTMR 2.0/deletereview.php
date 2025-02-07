@@ -1,33 +1,33 @@
 <?php
 require_once("php/page.class.php");
 require_once("php/util.class.php");
-require_once("php/commentcrud.class.php");
+require_once("php/reviewcrud.class.php");
 
 $page = new Page(2);
-$comment = new Comment();
+$review = new Review();
 $currentUser = $page->getUser();
 
 try {
     // Retrieve the Comment ID
-    $cid = (util::posted($_GET['cid']) ? $_GET['cid'] : "");
+    $rid = (util::posted($_GET['rid']) ? $_GET['rid'] : "");
 
-    if (!$cid) {
-        die("Error: No comment ID provided.");
+    if (!$rid) {
+        die("Error: No review ID provided.");
     }
 
     // Initialize the Comment with data from the database
-    if ($comment->getCommentById($cid)) {
+    if ($review->getReviewById($rid)) {
         // Check user permissions AFTER the comment is loaded
-        if (($currentUser->getUsertype() == 3) || ($currentUser->getUserid() == $comment->getAuthor()->getUserid())) {
+        if (($currentUser->getUserLevel() == 3) || ($currentUser->getUserid() == $review->getAuthor()->getUserid())) {
 
             // Delete the Comment
-            $result = $comment->deleteComment($cid);
-            echo "Comment Deleted.";
+            $result = $review->deleteReview($rid);
+            echo "Review Deleted.";
         } else {
             echo "Error: Unauthorized access.";
         }
     } else {
-        echo "Error: Comment not found.";
+        echo "Error: Review not found.";
     }
 } catch (Exception $e) {
     echo "Error: ", $e->getMessage();

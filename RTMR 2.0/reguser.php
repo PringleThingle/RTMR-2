@@ -20,22 +20,15 @@ view::showHeader($pagename);
 require_once("php/user.class.php");
 
 $username=$_POST['username'];
-$firstname=$_POST['firstname'];
-$surname=$_POST['surname'];
 $email=$_POST['email'];
-$dob=$_POST['dob'];
 $userpass=$_POST['userpass'];
 $reguser=new User();
 
-if (strlen($firstname) > 30) {
-	die("Firstname must not exceed 30 characters.");
-} elseif (strlen($surname) > 30){
-	die("Surname must not exceed 30 characters.");
-} elseif (strlen($email) > 45) {
+if (strlen($email) > 45) {
 	die("Email must not exceed 45 characters.");
 } else {
 	try {
-		$result=$reguser->registerUser($username,$userpass,$firstname,$surname,$email,$dob);
+		$result=$reguser->registerUser($username,$userpass,$email);
 		if($result['insert']==1) {
 			echo "User Registered<br />";
 			?>
