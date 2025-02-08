@@ -1,5 +1,8 @@
 <?php
 require_once("db.php");
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 
 /*****************
 * Article CRUD class
@@ -75,7 +78,7 @@ class MovieCRUD {
 			default:
 				$comparator='<=';$direction='DESC';break;
 		}
-		$this->sql="select * from movieInfo where movieDate $comparator ? order by movieDate $direction limit ?";
+		$this->sql="select * from movieInfo where watchedDate $comparator ? order by watchedDate $direction limit ?";
 		$this->stmt = self::$db->prepare($this->sql);
 		$this->stmt->bind_param("si",$start,$qty);
 		$this->stmt->execute();
@@ -88,8 +91,8 @@ class MovieCRUD {
 	* adds a new Article, returns 1 on success, error message on fail
 	**************/		
 
-	public function addMovie($mid, $title, $description, $posterLink, $directorID) {
-		// Step 1: Validate that directorID exists in directorInfo
+	public function addMovie($mid, $title, $description, $releasedate, $posterLink, $directorID) {
+		// Validate that directorID exists
 		$this->sql = "SELECT directorID FROM directorInfo WHERE directorID = ?";
 		$this->stmt = self::$db->prepare($this->sql);
 		$this->stmt->bind_param("i", $directorID);
@@ -100,27 +103,40 @@ class MovieCRUD {
 			return "Error: The provided directorID ($directorID) does not exist in directorInfo.<br />";
 		}
 	
-		// Step 2: Insert the movie with the given directorID
-		$this->sql = "INSERT INTO movieInfo (movieID, title, movieDescription, posterLink, directorID) 
-					  VALUES (?, ?, ?, ?, ?)";
+		// Convert releaseDate to string if it's a DateTime object
+		if ($releasedate instanceof DateTime) {
+			$releasedate = $releasedate->format('Y-m-d');
+		}
+	
+		// Prepare the SQL for inserting the movie
+		$this->sql = "INSERT INTO movieInfo (movieID, title, movieDescription, releaseDate, posterLink, directorID) 
+					  VALUES (?, ?, ?, ?, ?, ?)";
 		$this->stmt = self::$db->prepare($this->sql);
-		$this->stmt->bind_param("isssi", $mid, $title, $description, $posterLink, $directorID);
-		$this->stmt->execute();
+	
+		if (!$this->stmt) {
+			return "SQL Preparation Error: " . self::$db->error . "<br />";
+		}
+	
+		// Bind parameters
+		$this->stmt->bind_param("issssi", $mid, $title, $description, $releasedate, $posterLink, $directorID);
+	
+		// Execute and check for errors
+		if (!$this->stmt->execute()) {
+			return "SQL Execution Error: " . $this->stmt->error . "<br />" .
+				   "SQL Query: " . $this->sql . "<br />" .
+				   "Parameters: [movieID: $mid, title: $title, description: $description, releaseDate: $releasedate, posterLink: $posterLink, directorID: $directorID]<br />";
+		}
 	
 		if ($this->stmt->affected_rows !== 1) {
-			return "Could not add movie.<br />";
-		} else {
-			return "Movie successfully added!";
+			return "Could not add movie. No rows affected.<br />" .
+				   "SQL Query: " . $this->sql . "<br />" .
+				   "Parameters: [movieID: $mid, title: $title, description: $description, releaseDate: $releasedate, posterLink: $posterLink, directorID: $directorID]<br />";
 		}
+	
+		return 1;  // Return 1 on success
 	}
 	
-
-
-
-
-
-
-
+	
 	// public function addMovie($mid, $title, $description, $posterLink, $director) {
 	// 	$this->sql="insert into movieInfo (movieID,movieTitle,movieDescription, posterLink, directorID) values (?,?,?,?,?);";
 	// 	$this->stmt = self::$db->prepare($this->sql);

@@ -165,57 +165,58 @@ class Page {
 	**************/
 
 	public function displayMovies() {
-		$output="";
+		$output = "";
 		
-		foreach($this->movies as $movie) {
-			$output.="<movie>";
-			$output.="<h1 id='movietitle'class='movietitle'>".htmlentities($movie->getTitle())."</h1><div id='a".htmlentities($movie->getID())."'>";
+		foreach ($this->movies as $movie) {
+			$output .= "<movie>";
+			$output .= "<h1 id='movietitle' class='movietitle'>" . htmlentities($movie->getTitle()) . "</h1><div id='a" . htmlentities($movie->getID()) . "'>";
 			
-			$output.="<footer><h2>Directed by ".htmlentities($movie->getDirectorID())."</p></footer>";
-			$output.="<p id=\"movietext\">".nl2br(htmlentities($movie->getDescription()))."</p>";
-			if($this->getStatus() && $this->getUser()->getUserLevel()>=2) {
-				$output.="<ul class='moviemenu'>";
-			}
-			if($this->getStatus() && $this->getUser()->getUserLevel()>=3) {
-				$output.="<li><a href='deletemovie.php?aid=".$movie->getID()."' onclick='return confirm(\"Do you want to delete this article?\");'>Delete Article</a></li>";
-			}
-			if($this->getStatus() && $this->getUser()->getUserLevel()>=2) {
-				$output.="<li><a href='addreview.php?aid=".$movie->getID()."'>Add Comment</a></li>";
-				$output.="</ul>";
+			// Display movie poster
+			$output .= "<div class='movie-poster'><img src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster' style='max-width: 200px; height: auto; margin-bottom: 10px;'></div>";
 			
+			$output .= "<footer><h2>Directed by " . htmlentities($movie->getDirectorNameByMovieID($movie->getID())) . "</h2></footer>";
+			$output .= "<p id='movietext'>" . nl2br(htmlentities($movie->getDescription())) . "</p>";
+			
+			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
+				$output .= "<ul class='moviemenu'>";
 			}
-
-
-
-			$output.="</div>";
-			$output.="<section id='reviews' class='reviews'><h2>Reviews</h2>";
-
+			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 3) {
+				$output .= "<li><a href='deletemovie.php?aid=" . $movie->getID() . "' onclick='return confirm(\"ARE YOU SURE YOU WANT TO DELETE THIS MOVIE? THIS WILL ALSO DELETE ALL ITS REVIEWS!\");'>Delete Movie</a></li>";
+			}
+			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
+				$output .= "<li><a href='addreview.php?aid=" . $movie->getID() . "'>Add Review</a></li>";
+				$output .= "</ul>";
+			}
+			
+			$output .= "</div>";
+			$output .= "<section id='reviews' class='reviews'><h2>Reviews</h2>";
+	
 			$reviews = $movie->getReviewsForMovie($movie->getID());
 			if (!empty($reviews)) {
 				foreach ($reviews as $review) {
-					$output.="<div class='review' solid #ccc; padding: 10px;'>";
-					$output.="<footer><h3>Written by ".htmlentities($review->getAuthor()->getUsername())."</h3><p> on <time datetime='".htmlentities($review->getRDate()->format("Y-m-d H:i:s"))."'>".htmlentities($review->getRDate()->format("Y-m-d"))." at ".htmlentities($review->getRDate()->format("H:i:s"))."</time></p></footer>";
-					$output.= "<p class='reviewText'>" . nl2br(htmlentities($review->getText())) . "</p>";
-					$output.="</div>";
-
-					if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output.="<li><a href='editcomment.php?cid=".$review->getRID()."'>Edit</a></li>";
-						$output.="</ul>";
+					$output .= "<div class='review' style='border: 1px solid #ccc; padding: 10px;'>";
+					$output .= "<footer><h3>Written by " . htmlentities($review->getAuthor()->getUsername()) . "</h3><p> on <time datetime='" . htmlentities($review->getRDate()->format("Y-m-d H:i:s")) . "'>" . htmlentities($review->getRDate()->format("Y-m-d")) . " at " . htmlentities($review->getRDate()->format("H:i:s")) . "</time></p></footer>";
+					$output .= "<p class='reviewText'>" . nl2br(htmlentities($review->getText())) . "</p>";
+					$output .= "</div>";
+	
+					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+						$output .= "<li><a href='editreview.php?cid=" . $review->getRID() . "'>Edit</a></li>";
+						$output .= "</ul>";
 					}
-
-					if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output.="<li><a href='deletecomment.php?cid=".$review->getRID()."' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
-						$output.="</ul>";
-					
+	
+					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+						$output .= "<li><a href='deletereview.php?cid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
+						$output .= "</ul>";
 					}
 				}
 			} else {
 				$output .= "<p>No reviews yet. Be the first to review!</p>";
 			}
-			$output.="</section></article>";
+			$output .= "</section></article>";
 		}
 		return $output;
 	}
+	
 
 	
 	/*************

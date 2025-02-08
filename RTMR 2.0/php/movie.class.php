@@ -6,6 +6,10 @@ require_once("directorcrud.class.php");
 //require_once("comment.class.php");
 require_once("util.class.php");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 
 /**************
 * Article class
@@ -65,7 +69,7 @@ class Movie {
 	* Setter for datetime, accepts a date in string format
 	**************/	
 	private function setMDate($date) { 
-		$this->mdate=DateTime::createFromFormat("Y-m-d H:i:s", $date);
+		$this->mdate=DateTime::createFromFormat("Y-m-d", $date);
 		}
 	
 	/**************
@@ -88,6 +92,7 @@ class Movie {
 	**************/
 	public function getID() { return $this->mid; }
 	public function getMDate() { return $this->mdate; }
+	public function getWDate() { return $this->mdate; }
 	public function getTitle() { return $this->mtitle; }
 	public function getDescription() { return $this->mdescription; }
 	public function getReviewList() { return $this->reviews;}
@@ -120,7 +125,7 @@ class Movie {
 	**************/
 	public function initMovie($movie) {
 		$this->setID($movie["movieID"]);
-		$this->setMDate($movie["movieDate"]);
+		$this->setMDate($movie["releaseDate"]);
 		$this->setTitle($movie["title"]);
 		$this->setDirectorID($movie["directorID"]);
 		$this->setPosterLink($movie["posterLink"]);
@@ -161,6 +166,19 @@ class Movie {
 		} 
 		return $havedirector;
 	}
+
+	public function getDirectorNameByMovieID($mid) {
+		$source = new DirectorCRUD();
+		$directorName = $source->getDirectorNameByMovieID($mid);
+	
+		if ($directorName !== "Director not found.") {
+			return $directorName;  // Return the director's name
+		}
+	
+		return "Unknown Director";  // Return a placeholder if not found
+	}
+	
+	
 	
 	/**************
 	* Calls ArticleCRUD 
@@ -207,27 +225,33 @@ class Movie {
 	* error message as an associative array
 	**************/	
 
-	public function addMovie($mid,$title,$description,$posterLink,$director) {
-		//$mid=0;
-		$insert=0;
-		$messages="";
-		if($this->setID($mid)) {
-			$target=new MovieCRUD();
+	public function addMovie($mid, $title, $description, $releaseDate, $posterLink, $director) {
+		$insert = 0;
+		$messages = "";
+	
+		if ($this->setID($mid)) {
+			echo($releaseDate);
+			$target = new MovieCRUD();
 			$this->setID($mid); 
 			$this->setTitle($title);
 			$this->setDescription($description);
+			$this->setMDate($releaseDate);
 			$this->setPosterLink($posterLink);
 			$this->setDirectorID($director);
-			$insert=$target->addMovie($this->getID(), $this->getTitle(), $this->getDescription(), $this->getPosterLink(), $this->getDirectorID());
-			if($insert!=1) { $messages.=$insert;$insert=0; }
-		} else { 
+	
+			$insert = $target->addMovie($this->getID(), $this->getTitle(), $this->getDescription(), $this->getMDate(), $this->getPosterLink(), $this->getDirectorID());
+	
+			if ($insert !== 1) {
+				$messages .= $insert;  // Collect the error message
+				$insert = 0;
+			}
+		} else {
 			die("setID() failed for mid: " . htmlspecialchars($mid));
-			$messages="Invalid Poster<br>"; 
-
 		}
-		$result=['insert'=>$insert,'messages'=>$messages];
-		return $result;
+	
+		return ['insert' => $insert, 'messages' => $messages];
 	}
+	
 
 	/**************
 	* If the current article is value (aid!=-1) this will

@@ -33,6 +33,31 @@ class DirectorCRUD {
 		$resultset=$result->fetch_all($style);
 		return $resultset;
 	}
+
+	public function getDirectorNameByMovieID($movieid) {
+		$this->sql = "SELECT directorInfo.directorName 
+					  FROM directorInfo 
+					  JOIN movieInfo ON directorInfo.directorID = movieInfo.directorID 
+					  WHERE movieInfo.movieID = ?";
+		$this->stmt = self::$db->prepare($this->sql);
+	
+		if (!$this->stmt) {
+			die("SQL Preparation Error: " . self::$db->error . "<br />");
+		}
+	
+		$this->stmt->bind_param("i", $movieid);
+		$this->stmt->execute();
+		$result = $this->stmt->get_result();
+		
+		// Fetch the first row only
+		if ($row = $result->fetch_assoc()) {
+			return $row['directorName'];  // Return the director's name
+		} else {
+			return "Unknown Director";  // Return a default value if no director is found
+		}
+	}
+	
+	
 	
 	/**************
 	* stores a new user in the database including their username, firstname, surname, hashed password, email and date of birth
@@ -74,6 +99,26 @@ class DirectorCRUD {
 		$resultset=$result->fetch_all($style);
 		return $resultset;
 	}
+
+	public function getOrCreateDirector($directorid, $name, $dob = null, $birthplace = null) {
+		// Check if the director already exists
+		$existingDirector = $this->getDirectorByID($directorid);
+		
+		if (!empty($existingDirector)) {
+			// Director exists, return their ID
+			return $directorid;
+		}
+	
+		// Director does not exist, insert them
+		$result = $this->storeNewDirector($directorid, $name, $dob ?? 'Unknown', $birthplace ?? 'Unknown');
+		
+		if ($result === 1) {
+			return $directorid;
+		} else {
+			throw new Exception("Failed to store director: $result");
+		}
+	}
+	
 
 }
 ?>

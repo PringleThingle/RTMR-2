@@ -5,14 +5,16 @@ class SelectMovie {
     private $releaseDate;
     private $description;
     private $posterPath;
+    private $director;
     private $rating;
 
-    public function __construct($id, $title, $releaseDate, $description, $posterPath, $rating) {
+    public function __construct($id, $title, $releaseDate, $description, $posterPath, $director = "Unknown", $rating = 0) {
         $this->id = $id;
         $this->title = $title;
         $this->releaseDate = $releaseDate;
         $this->description = $description;
         $this->posterPath = $posterPath;
+        $this->director = $director;
         $this->rating = $rating;
     }
 
@@ -49,12 +51,14 @@ class SelectMovie {
             <p><strong>Release Date:</strong> {$this->releaseDate}</p>
             <p class='rating'>⭐ {$this->rating}/10</p>
             <p>{$this->description}</p>
-            <form method='POST' action='addMovie.php'>
-                <input type='hidden' name='movie_id' value='{$this->id}'>
+            <form method='POST' action='amovie.php'>
+                <input type='hidden' name='mid' value='{$this->id}'>
                 <input type='hidden' name='title' value='{$this->title}'>
-                <input type='hidden' name='release_date' value='{$this->releaseDate}'>
-                <input type='hidden' name='poster_path' value='{$this->posterPath}'>
-                <button type='submit'>Add Movie</button>
+                <input type='hidden' name='releaseDate' value='{$this->releaseDate}'>
+                <input type='hidden' name='posterLink' value='{$this->posterPath}'>
+                <input type='hidden' name='description' value='{$this->description}'>
+                <input type='hidden' name='director' value='{$this->director}'>
+                <button style=\"color:white\" type='submit'>Add Movie</button>
             </form>
         </div>";
     }
