@@ -85,7 +85,7 @@ if ($searchQuery) {
                             $movie['id'],
                             htmlspecialchars($movie['title']),
                             $movie['release_date'],
-                            htmlspecialchars(substr($movie['overview'], 0, 150)) . "...",
+                            htmlspecialchars($movie['overview']),
                             "https://image.tmdb.org/t/p/w500" . $movie['poster_path'],
                             isset($movie['vote_average']) ? number_format($movie['vote_average'], 1) : "N/A"
                         );

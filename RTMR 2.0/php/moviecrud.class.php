@@ -79,6 +79,7 @@ class MovieCRUD {
 				$comparator='<=';$direction='DESC';break;
 		}
 		$this->sql="select * from movieInfo where watchedDate $comparator ? order by watchedDate $direction limit ?";
+		error_log("Executing SQL: " . $this->sql);  // Log the SQL query
 		$this->stmt = self::$db->prepare($this->sql);
 		$this->stmt->bind_param("si",$start,$qty);
 		$this->stmt->execute();

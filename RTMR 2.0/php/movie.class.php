@@ -24,7 +24,7 @@ class Movie {
 	* acontent - main body of article textdomain
 	* comments - an array for instances of Comment
 	***************/
-	private $mid, $mdate, $mrating, $mdirector, $mtitle, $mdescription, $mposterlink;
+	private $mid, $mdate, $wdate, $mrating, $mdirector, $mtitle, $mdescription, $mposterlink;
 	/* 
 	* Note that the Comment class has not been provided, but the comments
 	* array is being used to help you see where the comments would be accessed and manipulated
@@ -41,6 +41,7 @@ class Movie {
 	public function __construct() {
 		$this->mid=-1;
 		$this->mdate=new DateTime();
+		$this->wdate=new DateTime();
 		$this->mdirector="";
 		$this->mtitle="";
 		$this->mdescription="";
@@ -71,6 +72,14 @@ class Movie {
 	private function setMDate($date) { 
 		$this->mdate=DateTime::createFromFormat("Y-m-d", $date);
 		}
+
+		private function setWDate($date) {
+			$this->wdate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
+			if ($this->wdate === false) {
+				error_log("Invalid watchedDate: $date");
+				$this->wdate = new DateTime("1970-01-01 00:00:00");  // Default fallback
+			}
+		}
 	
 	/**************
 	* Setter for article title, uses string sanitiser method
@@ -92,7 +101,7 @@ class Movie {
 	**************/
 	public function getID() { return $this->mid; }
 	public function getMDate() { return $this->mdate; }
-	public function getWDate() { return $this->mdate; }
+	public function getWDate() { return $this->wdate; }
 	public function getTitle() { return $this->mtitle; }
 	public function getDescription() { return $this->mdescription; }
 	public function getReviewList() { return $this->reviews;}
@@ -126,6 +135,7 @@ class Movie {
 	public function initMovie($movie) {
 		$this->setID($movie["movieID"]);
 		$this->setMDate($movie["releaseDate"]);
+		$this->setWDate($movie["watchedDate"]);
 		$this->setTitle($movie["title"]);
 		$this->setDirectorID($movie["directorID"]);
 		$this->setPosterLink($movie["posterLink"]);

@@ -26,13 +26,13 @@ echo $page->displayMovies();
 
 </body>
 <script src="js/touch.js"></script>
-<script src="js/article.js"></script>
-<script hidden=True>
+<script src="js/movies.js"></script>
+<script hidden>
 document.onreadystatechange = function(){
-	if(document.readyState=="complete") {
-		var moviehandler=new Movie("main");
-		var mytouchhandler=new TouchScaler(["#mainheader","nav","main"]);
-	}
+    if(document.readyState == "complete") {
+        new MovieLoader("#main");
+        var mytouchhandler = new TouchScaler(["#mainheader", "nav", "main"]);
+    }
 }
 </script>
 </html>

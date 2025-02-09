@@ -168,7 +168,7 @@ class Page {
 		$output = "";
 		
 		foreach ($this->movies as $movie) {
-			$output .= "<movie>";
+			$output .= "<movie data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
 			$output .= "<h1 id='movietitle' class='movietitle'>" . htmlentities($movie->getTitle()) . "</h1><div id='a" . htmlentities($movie->getID()) . "'>";
 			
 			// Display movie poster
@@ -212,10 +212,11 @@ class Page {
 			} else {
 				$output .= "<p>No reviews yet. Be the first to review!</p>";
 			}
-			$output .= "</section></article>";
+			$output .= "</section></movie>";  // Close the <movie> element
 		}
 		return $output;
 	}
+	
 	
 
 	
