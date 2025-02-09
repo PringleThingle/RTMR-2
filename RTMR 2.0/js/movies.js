@@ -1,77 +1,88 @@
 'use strict';
 
-function MovieLoader() {
-    this.lastWatchedDate = null;  // Track the last watched date
-    this.loadedMovieIDs = new Set();  // Keep track of loaded movie IDs
+function MovieLoader(parentElementSelector) {
+    this.lastWatchedDate = null;
     this.XHR = this.createXHR();
-    setInterval(this.check.bind(this), 1000);  // Check every second
+    this.parentElement = document.querySelector(parentElementSelector);
+
+    if (!this.parentElement) {
+        console.error("Parent element not found:", parentElementSelector);
+        return;  // Exit the function if the parent element is not found
+    }
+
+    var checkInterval = setInterval(this.check.bind(this), 1000);
 }
 
+
+
 MovieLoader.prototype.getLastMovie = function() {
-    const movies = document.querySelectorAll("movie[data-movie-id]");
-    return movies[movies.length - 1] || null;  // Return the last movie element
+    const movies = document.querySelectorAll(".movie-item");
+    return movies[movies.length - 1];  // Return the last <movie> element
 };
 
 MovieLoader.prototype.toBottom = function() {
-    const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    return docHeight - (window.innerHeight + window.scrollY);
+    var d = document, b = d.body, e = d.documentElement;
+    return Math.max(
+        b.scrollHeight, e.scrollHeight,
+        b.offsetHeight, e.offsetHeight,
+        b.clientHeight, e.clientHeight
+    ) - (window.innerHeight + window.scrollY);
 };
 
 MovieLoader.prototype.check = function() {
-    if (this.toBottom() < 20) {
+    if (this.toBottom() < 20 && !this.loading) {  // Only proceed if not already loading
+        this.loading = true;  // Set the loading flag
         console.info("Reached the bottom, loading more movies...");
-        
-        const lastMovie = this.getLastMovie();
-        if (lastMovie) {
-            const movieID = lastMovie.getAttribute("data-movie-id");
-            const watchedDate = lastMovie.getAttribute("data-watched-date");
-            
-            if (this.loadedMovieIDs.has(movieID)) {
-                console.warn("Movie already loaded or missing data.");
-                return;
-            }
 
-            this.lastWatchedDate = watchedDate;
-            console.log("Loading more movies with watchedDate:", this.lastWatchedDate);
+        var lastChild = this.getLastMovie();
+        if (lastChild) {
+            this.lastWatchedDate = lastChild.getAttribute("data-watched-date");
+            console.log("Last Watched Date:", this.lastWatchedDate);
             this.loadMoreMovies(this.lastWatchedDate);
         }
     }
 };
 
 MovieLoader.prototype.createXHR = function() {
-    if (window.XMLHttpRequest) return new XMLHttpRequest();
-    return new ActiveXObject("Microsoft.XMLHTTP");
+    if (window.XMLHttpRequest) {
+        return new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        return new ActiveXObject("Microsoft.XMLHTTP");
+    }
 };
 
 MovieLoader.prototype.loadMoreMovies = function(lastWatchedDate) {
-    console.log("Requesting more movies with watchedDate:", lastWatchedDate);
+    this.isLoading = true;  // Set loading flag
+    console.log("Sending request to getMovie.php with lastWatchedDate:", lastWatchedDate);
 
     this.XHR.open("POST", "php/getMovie.php", true);
     this.XHR.onreadystatechange = this.appendMovies.bind(this);
     this.XHR.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     this.XHR.send("lastWatchedDate=" + encodeURIComponent(lastWatchedDate));
+
+    console.log("Request sent to getMovie.php!");
 };
 
 MovieLoader.prototype.appendMovies = function() {
     if (this.XHR.readyState === 4 && this.XHR.status === 200) {
-        console.log("Response received:", this.XHR.responseText);
-        if (this.XHR.responseText.trim() !== "") {
-            const newMovies = document.createElement('div');
-            newMovies.innerHTML = this.XHR.responseText;
+        if (!this.parentElement) {
+            console.error("Parent element is undefined.");
+            return;
+        }
 
-            // Add each new movie while tracking its ID
-            newMovies.querySelectorAll("movie[data-movie-id]").forEach(movie => {
-                const movieID = movie.getAttribute("data-movie-id");
-                if (!this.loadedMovieIDs.has(movieID)) {
-                    document.body.appendChild(movie);  // Append the new movie to the body
-                    this.loadedMovieIDs.add(movieID);
-                }
-            });
+        const responseHTML = this.XHR.responseText;
+        if (responseHTML.trim() !== "") {
+            this.parentElement.insertAdjacentHTML("beforeend", responseHTML);
         } else {
             console.info("No more movies to load.");
+            document.querySelector(".movie-item").insertAdjacentHTML("beforeend", "<p>All movies loaded!</p>");
         }
     }
 };
 
+
 // Initialize MovieLoader
-document.addEventListener('DOMContentLoaded', () => new MovieLoader());
+document.addEventListener('DOMContentLoaded', function() {
+    new MovieLoader(".movie-item");  // Pass the class or ID of the container holding the movies
+});
+

@@ -6,11 +6,6 @@ require_once("directorcrud.class.php");
 //require_once("comment.class.php");
 require_once("util.class.php");
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-
-
 /**************
 * Article class
 **************/
@@ -73,13 +68,13 @@ class Movie {
 		$this->mdate=DateTime::createFromFormat("Y-m-d", $date);
 		}
 
-		private function setWDate($date) {
-			$this->wdate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
-			if ($this->wdate === false) {
-				error_log("Invalid watchedDate: $date");
-				$this->wdate = new DateTime("1970-01-01 00:00:00");  // Default fallback
-			}
+	private function setWDate($date) {
+		$this->wdate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
+		if ($this->wdate === false) {
+			error_log("Invalid watchedDate: $date");
+			$this->wdate = new DateTime("1970-01-01 00:00:00");  // Default fallback
 		}
+	}
 	
 	/**************
 	* Setter for article title, uses string sanitiser method

@@ -168,7 +168,10 @@ class Page {
 		$output = "";
 		
 		foreach ($this->movies as $movie) {
-			$output .= "<movie data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
+			if (!$movie || !is_object($movie)) {
+				continue;  // Skip if $movie is not a valid object
+			}
+			$output .= "<div class=movie-item data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
 			$output .= "<h1 id='movietitle' class='movietitle'>" . htmlentities($movie->getTitle()) . "</h1><div id='a" . htmlentities($movie->getID()) . "'>";
 			
 			// Display movie poster
@@ -181,10 +184,10 @@ class Page {
 				$output .= "<ul class='moviemenu'>";
 			}
 			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 3) {
-				$output .= "<li><a href='deletemovie.php?aid=" . $movie->getID() . "' onclick='return confirm(\"ARE YOU SURE YOU WANT TO DELETE THIS MOVIE? THIS WILL ALSO DELETE ALL ITS REVIEWS!\");'>Delete Movie</a></li>";
+				$output .= "<li><a href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"ARE YOU SURE YOU WANT TO DELETE THIS MOVIE? THIS WILL ALSO DELETE ALL ITS REVIEWS!\");'>Delete Movie</a></li>";
 			}
 			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
-				$output .= "<li><a href='addreview.php?aid=" . $movie->getID() . "'>Add Review</a></li>";
+				$output .= "<li><a href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></li>";
 				$output .= "</ul>";
 			}
 			
@@ -200,12 +203,12 @@ class Page {
 					$output .= "</div>";
 	
 					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output .= "<li><a href='editreview.php?cid=" . $review->getRID() . "'>Edit</a></li>";
+						$output .= "<li><a href='editreview.php?rid=" . $review->getRID() . "'>Edit</a></li>";
 						$output .= "</ul>";
 					}
 	
 					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output .= "<li><a href='deletereview.php?cid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
+						$output .= "<li><a href='deletereview.php?rid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
 						$output .= "</ul>";
 					}
 				}

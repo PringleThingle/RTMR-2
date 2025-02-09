@@ -30,37 +30,16 @@
     header, main, article, aside, footer { font-size:1.8rem;}
     p, li, a, span, time { font-size:1.6rem; }
 
-    /* body > * > *:hover {
-    background-color:#440;
-    color:#bbb;
-    }
-    body > * > * > *:hover {
-    background-color:#660;
-    color:#ddd;
-    }
-    body > * > * > * > *:hover {
-    background-color:rgb(136, 0, 0);
-    color:#fff;
-    }
-    body > * > * > * > * > *:hover {
-    background-color:#885;
-    color:#fff;
-    }
-    body > * > * > * > * > * > *:hover {
-    background-color:#888;
-    color:#fff;
-    } */
-
     body, main {
     font-family:arial, sans-serif;
-    width:958.4px;
+    width:1198.4px;
     margin:0px auto;
     padding:0px;
     }
 
     body > header {
     display:block;
-    width:952.4px;
+    width:1192.4px;
     height:fit-content;
     /* background-color:#fff; */
     background-image:url('../assets/header_large.jpg');
@@ -73,11 +52,11 @@
     margin:0px;
     margin-bottom:7px;
     display:block;
-    width:952.4px;
+    width:1192.4px;
     height:70px;
     position:sticky;
     top:0px;
-    background-color:#a6a1a1;
+    background-color:#5A4027;
     z-index:45;
     }
 
@@ -89,8 +68,8 @@
     }
     nav ul {
     list-style-type:none;
-    background-color:#a6a1a1;
-    border-color:#a6a1a1;
+    background-color:#5A4027;
+    border-color:#5A4027;
     }
     nav ul li {
     float:left;

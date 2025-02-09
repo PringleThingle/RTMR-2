@@ -22,8 +22,6 @@ echo $page->displayMovies();
 ?>
 </main>
 
-
-
 </body>
 <script src="js/touch.js"></script>
 <script src="js/movies.js"></script>

@@ -4,12 +4,12 @@ require_once("php/util.class.php");
 require_once("php/moviecrud.class.php");
 
 $page = new Page(3);
-$article = new MovieCRUD();
+$movie = new MovieCRUD();
 
 try {
-    $aid=(util::posted($_GET['mid'])?$_GET['mid']:"");
+    $mid=(util::posted($_GET['mid'])?$_GET['mid']:"");
 
-	$result=$article->deleteMovie($mid);
+	$result=$movie->deleteMovie($mid);
 	if($result['update']==1) {
 		echo "Movie deleted<br />";
 	} else {

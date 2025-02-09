@@ -16,8 +16,7 @@ class UserList {
 	public function __toString() {
 		$string="<select name='userid'>";
 		foreach($this->users as $user) {
-			$string.="<option value='".$user['userid']."'>".$user['firstname']." ".$user['surname']." (".$user['username'].")"."</option>";
-		}
+			$string .= "<option value='" . $user['userID'] . "'>" . $user['username'] . "</option>";		}
 		$string.="</select>";
 		return $string;
 	}

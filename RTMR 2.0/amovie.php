@@ -7,17 +7,16 @@
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-    <h1>Add Movie</h1>
     <?php
     require_once("php/page.class.php");
     require_once("php/util.class.php");
     require_once("php/movie.class.php");
     require_once("php/directorcrud.class.php");
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-
-    $page = new Page(3);
+    require_once("php/view.class.php");
+    $pagename = "Add movie";
+    $page = new Page(2);
+    view::showHead($pagename);
+    view::showHeader($pagename);
     ?>
 
     <nav>
@@ -111,8 +110,7 @@
             echo "<h2>Movie and Director Added Successfully!</h2>";
             echo $page->displayMovies();
         } else {
-            echo "<h2>Add Failed</h2>";
-            echo $result['messages'];
+            echo "<h2>Movie already added!</h2>";
         }
     } else {
         echo "<h2>Error: Missing required movie data.</h2>";

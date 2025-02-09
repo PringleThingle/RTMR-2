@@ -8,15 +8,15 @@
 <?php
 require_once("php/page.class.php");
 require_once("php/user.class.php");
-require_once("php/comment.class.php");
+require_once("php/review.class.php");
 
 $page = new Page(2);
-$editcomment = new Comment();
+$editreview = new Review();
 $currentUser = $page->getUser();
 #$edituser = new User();
-$editid = isset($_GET['cid']) ? $_GET['cid'] : null;
+$editid = isset($_GET['rid']) ? $_GET['rid'] : null;
 
-$found=$editcomment->getCommentById($editid);
+$found=$editreview->getReviewById($editid);
 ?>
 <nav>
 <ul class="navbar">
@@ -27,22 +27,22 @@ echo $page->getMenu();
 </nav>
 <?php
 if($found) {
-    if (($currentUser->getUsertype() == 3) || ($currentUser->getUserid() == $editcomment->getAuthor()->getUserid())) {
+    if (($currentUser->getUserLevel() == 3) || ($currentUser->getUserid() == $editreview->getAuthor()->getUserid())) {
 ?>
-<h1>Update Comment</h1>
+<h1>Edit Review</h1>
 
-<form method="post" action="updatecomment.php">
-<input type="hidden" name="commentID" id="commentID" value="<?php echo $editcomment->getCID();?>" required readonly />
-<label for="commenttext">Comment</label><textarea type="text" id="commenttext" name="commenttext" cols="60" rows="8" required><?php echo $editcomment->getText();?></textarea><br />
-<button type="submit">Update Comment</button>
+<form method="post" action="updatereview.php">
+<input type="hidden" name="rid" id="rid" value="<?php echo $editreview->getRID();?>" required readonly />
+<label for="reviewtext">Review</label><textarea type="text" id="reviewtext" name="reviewtext" cols="60" rows="8" required><?php echo $editreview->getText();?></textarea><br />
+<button type="submit">Update Review</button>
 </form>
 <?php
     } else {
-        echo "<p>You do not have permission to edit this comment.</p>";
+        echo "<p>You do not have permission to edit this review.</p>";
     }
 
 } else {
-	echo "<p>Cannot find comment to edit $editid</p>";
+	echo "<p>Cannot find review to edit $editid</p>";
 }
 ?>
 </body>
