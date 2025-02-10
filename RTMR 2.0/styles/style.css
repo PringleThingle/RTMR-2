@@ -120,6 +120,9 @@
         align-items: center;
         list-style:none;
         display:flex;
+        height:25px;
+        width:200px;
+        align-items:middle;
     }
 
     .movie-item > h1 {
@@ -131,12 +134,27 @@
 
     .movie-item {
         border-color:red;
+        display:flex;
+        flex-direction:row;
+    }
+
+    .reviewer {
+        border:none;
     }
 
     .movietitle {
-        display:flex;
-        height: 30px;
+        display:block;
+        height: 3rem;
+        line-height: 3rem;
+        font-size: clamp(0.8rem, 2vw, 1.5rem); 
+        white-space: nowrap; /* Prevent wrapping */
+        overflow: hidden;    /* Hide overflow */
+        text-overflow: ellipsis;
         width: 200px;
+    }
+
+    .movie-content {
+        width: 214px;
     }
 
     body > footer {
@@ -151,6 +169,9 @@
 
     .moviebutton {
         width:100px;
+        border:none;
+        display:inline;
+        margin:5px;
     }
 
     .mainbar { 
@@ -185,6 +206,10 @@
 
     .movie-poster {
         width:200px;
+    }
+
+    .reviews {
+        width:100%;
     }
 
      @media screen and (min-width:800px) and (max-width:1023px) {

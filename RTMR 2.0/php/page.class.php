@@ -179,13 +179,11 @@ class Page {
 			$output .= "<div class='movie-content'>";
 			$output .= "<img class='movie-poster' src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster'>";
 			$output .= "<h2 class='movietitle'>" . htmlentities($movie->getTitle()) . "</h2>";
-			$output .= "<h2>Directed by " . htmlentities($movie->getDirectorNameByMovieID($movie->getID())) . "</h2>";
-			$output .= "<p class='movie-description'>" . nl2br(htmlentities($movie->getDescription())) . "</p>";
 			// Menu for edit/delete/add review
 			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
 				$output .= "<ul class='moviemenu'>";
 				if ($this->getUser()->getUserLevel() >= 3) {
-					$output .= "<li><a class='moviebutton' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete Movie</a></li>";
+					$output .= "<li><a class='moviebutton' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete</a></li>";
 				}
 				$output .= "<li><a class='moviebutton' href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></li>";
 				$output .= "</ul>";
@@ -201,15 +199,27 @@ class Page {
 			if (!empty($reviews)) {
 				foreach ($reviews as $review) {
 					$output .= "<div class='review'>";
-					$output .= "<strong>" . htmlentities($review->getAuthor()->getUsername()) . "</strong>";
-					$output .= "<time datetime='" . htmlentities($review->getRDate()->format("Y-m-d H:i:s")) . "'> (" . htmlentities($review->getRDate()->format("Y-m-d H:i")) . ")</time>";
+					$output .= "<strong class = 'reviewer'>". "By " . htmlentities($review->getAuthor()->getUsername()) . " on " . htmlentities($review->getRDate()->format("d-m-Y")) . "</strong>";
 					$output .= "<p>" . nl2br(htmlentities($review->getText())) . "</p>";
-					$output .= "</div>";
+					
 				}
+
+				if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+					$output.="<li><a class = 'moviebutton' href='editcomment.php?cid=".$review->getRID()."'>Edit</a></li>";
+					
+				}
+
+				if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+					$output.="<li><a class = 'moviebutton' href='deletecomment.php?cid=".$review->getRID()."' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
+					
+				
+				}
+
 			} else {
 				$output .= "<p>No reviews yet. Be the first to review!</p>";
 			}
-		
+			
+			$output .= "</div>"; //Close review item
 			$output .= "</section>";  // Close reviews section
 			$output .= "</div>";  // Close movie-item
 		}
@@ -217,8 +227,6 @@ class Page {
 		return $output;
 	}
 	
-	
-
 	
 	/*************
 	* creates and returns an array of information for each article including their comments
