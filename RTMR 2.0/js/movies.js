@@ -13,8 +13,6 @@ function MovieLoader(parentElementSelector) {
     var checkInterval = setInterval(this.check.bind(this), 1000);
 }
 
-
-
 MovieLoader.prototype.getLastMovie = function() {
     const movies = document.querySelectorAll(".movie-item");
     return movies[movies.length - 1];  // Return the last <movie> element
@@ -83,6 +81,6 @@ MovieLoader.prototype.appendMovies = function() {
 
 // Initialize MovieLoader
 document.addEventListener('DOMContentLoaded', function() {
-    new MovieLoader(".movie-item");  // Pass the class or ID of the container holding the movies
+    new MovieLoader(".movies-container");  // Pass the class or ID of the container holding the movies
 });
 

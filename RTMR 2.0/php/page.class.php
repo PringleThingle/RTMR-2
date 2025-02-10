@@ -99,14 +99,14 @@ class Page {
 	/**************
 	* Calls the user class and userCRUD class to update a users information
 	**************/
-	public function updateUser($username,$firstname,$surname,$password,$email,$dob,$userid, $usertype) {
+	public function updateUser($username,$password,$email,$userid, $usertype) {
 		if($this->getUser()->getUserLevel()==3 || $this->getUser()->getUserid()==$userid) {
 			$usertoupdate=new User();
 			$usertoupdate->getUserById($userid);
 			if($this->getUser()->getUserLevel()!=3) {
 				$usertype="";
 			}
-			$result=$usertoupdate->updateUser($username,$firstname,$surname,$password,$email,$dob,$usertype, $userid);
+			$result=$usertoupdate->updateUser($username,$password,$email,$usertype, $userid);
 			return $result;
 			
 		}
@@ -166,57 +166,54 @@ class Page {
 
 	public function displayMovies() {
 		$output = "";
-		
+
 		foreach ($this->movies as $movie) {
 			if (!$movie || !is_object($movie)) {
-				continue;  // Skip if $movie is not a valid object
+				continue;
 			}
-			$output .= "<div class=movie-item data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
-			$output .= "<h1 id='movietitle' class='movietitle'>" . htmlentities($movie->getTitle()) . "</h1><div id='a" . htmlentities($movie->getID()) . "'>";
-			
-			// Display movie poster
-			$output .= "<div class='movie-poster'><img src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster' style='max-width: 200px; height: auto; margin-bottom: 10px;'></div>";
-			
-			$output .= "<footer><h2>Directed by " . htmlentities($movie->getDirectorNameByMovieID($movie->getID())) . "</h2></footer>";
-			$output .= "<p id='movietext'>" . nl2br(htmlentities($movie->getDescription())) . "</p>";
-			
+		
+			$output .= "<div class='movie-item' data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
+		
+			// Display movie poster and movie details in a flex container
+
+			$output .= "<div class='movie-content'>";
+			$output .= "<img class='movie-poster' src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster'>";
+			$output .= "<h2 class='movietitle'>" . htmlentities($movie->getTitle()) . "</h2>";
+			$output .= "<h2>Directed by " . htmlentities($movie->getDirectorNameByMovieID($movie->getID())) . "</h2>";
+			$output .= "<p class='movie-description'>" . nl2br(htmlentities($movie->getDescription())) . "</p>";
+			// Menu for edit/delete/add review
 			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
 				$output .= "<ul class='moviemenu'>";
-			}
-			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 3) {
-				$output .= "<li><a href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"ARE YOU SURE YOU WANT TO DELETE THIS MOVIE? THIS WILL ALSO DELETE ALL ITS REVIEWS!\");'>Delete Movie</a></li>";
-			}
-			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
-				$output .= "<li><a href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></li>";
+				if ($this->getUser()->getUserLevel() >= 3) {
+					$output .= "<li><a class='moviebutton' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete Movie</a></li>";
+				}
+				$output .= "<li><a class='moviebutton' href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></li>";
 				$output .= "</ul>";
 			}
-			
-			$output .= "</div>";
-			$output .= "<section id='reviews' class='reviews'><h2>Reviews</h2>";
 	
+			$output .= "</div>";  // Close movie-content
+		
+			// Display reviews
+			$output .= "<section class='reviews'>";
+			$output .= "<h2>Reviews</h2>";
+		
 			$reviews = $movie->getReviewsForMovie($movie->getID());
 			if (!empty($reviews)) {
 				foreach ($reviews as $review) {
-					$output .= "<div class='review' style='border: 1px solid #ccc; padding: 10px;'>";
-					$output .= "<footer><h3>Written by " . htmlentities($review->getAuthor()->getUsername()) . "</h3><p> on <time datetime='" . htmlentities($review->getRDate()->format("Y-m-d H:i:s")) . "'>" . htmlentities($review->getRDate()->format("Y-m-d")) . " at " . htmlentities($review->getRDate()->format("H:i:s")) . "</time></p></footer>";
-					$output .= "<p class='reviewText'>" . nl2br(htmlentities($review->getText())) . "</p>";
+					$output .= "<div class='review'>";
+					$output .= "<strong>" . htmlentities($review->getAuthor()->getUsername()) . "</strong>";
+					$output .= "<time datetime='" . htmlentities($review->getRDate()->format("Y-m-d H:i:s")) . "'> (" . htmlentities($review->getRDate()->format("Y-m-d H:i")) . ")</time>";
+					$output .= "<p>" . nl2br(htmlentities($review->getText())) . "</p>";
 					$output .= "</div>";
-	
-					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output .= "<li><a href='editreview.php?rid=" . $review->getRID() . "'>Edit</a></li>";
-						$output .= "</ul>";
-					}
-	
-					if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-						$output .= "<li><a href='deletereview.php?rid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
-						$output .= "</ul>";
-					}
 				}
 			} else {
 				$output .= "<p>No reviews yet. Be the first to review!</p>";
 			}
-			$output .= "</section></movie>";  // Close the <movie> element
+		
+			$output .= "</section>";  // Close reviews section
+			$output .= "</div>";  // Close movie-item
 		}
+		
 		return $output;
 	}
 	

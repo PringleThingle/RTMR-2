@@ -14,7 +14,7 @@ view::showHeader($pagename);
 <?php echo $page->getMenu(); ?>
 </ul>
 </nav>
-<main>
+<main class = "movies-container">
 <?php
 $now=new DateTime();
 $page->getMovies($now->format("Y-m-d H:i:s O"), 2, "DESC");

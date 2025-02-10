@@ -1,6 +1,6 @@
 <?php
 define('APPNAME', "Rat Town Movie Reviews");
-define('APPLOGO', 'assets\logowithtext.png'); 
+define('APPLOGO', 'assets\RTMRT.png'); 
 
 
 
@@ -38,15 +38,12 @@ class view
     {
         ?>
         <header id='mainheader' class = "mainbar">
-            <h1>
-                <img src="<?php echo APPLOGO; ?>" alt="<?php echo APPNAME; ?>" style="height: 100px;">
+            <h1 class = "maintitle">
+                <img class = "maintitleimg" src="<?php echo APPLOGO; ?>" alt="<?php echo APPNAME; ?>" style="height: 100px;">
                 <!-- <?php echo APPNAME; ?> -->
                 
             </h1>
         </header>
-        <h2>
-            <?php echo $pagename; ?>
-        </h2>
         <?php
     }
 

@@ -111,6 +111,7 @@
             echo $page->displayMovies();
         } else {
             echo "<h2>Movie already added!</h2>";
+            return;
         }
     } else {
         echo "<h2>Error: Missing required movie data.</h2>";

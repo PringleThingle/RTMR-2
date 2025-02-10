@@ -23,11 +23,11 @@
     }
 
     h1 { 
-        font-size:3rem;
+        font-size:2.7rem;
     }
-    h2 { font-size:2.7rem;}
-    h3, h4 { font-size:2.2rem; }
-    header, main, article, aside, footer { font-size:1.8rem;}
+    h2 { font-size:2.2rem;}
+    h3, h4 { font-size:1.8rem; }
+    header, main, article, aside, footer { font-size:1.7rem;}
     p, li, a, span, time { font-size:1.6rem; }
 
     body, main {
@@ -42,7 +42,6 @@
     width:1192.4px;
     height:fit-content;
     /* background-color:#fff; */
-    background-image:url('../assets/header_large.jpg');
     background-position:center right;
     background-repeat:no-repeat;
     background-size:cover;
@@ -92,13 +91,9 @@
     }
     main > article, main > article > section, main > article >
     div, .comments, .comments aside {
-    border:1px solid #6c3e1f;
+    border:1px solid #5A4027;
     margin:2px;
     }
-
-    /* .comments {
-        width:auto;
-    } */
 
     main > article {display:flex;flex-flow: row wrap;}
     main > article, main > article > section, main > article > div {flex:1
@@ -113,18 +108,35 @@
         max-height:60vh;
         overflow-y:auto;
     }
-    main > article > section.comments {flex:1 auto;order:2; width:250px;}
 
-    article > h1 {
+    li {
+        border:1px;
+        color:brown;
+        padding:-3px;
+        margin:-3px;
+    }
+
+    .moviemenu {
+        align-items: center;
+        list-style:none;
+        display:flex;
+    }
+
+    .movie-item > h1 {
     flex:1 100%;
     top: 75px;
-    background-color: #6c3e1f;
+    background-color: #5A4027;
     z-index: 20;
     }
 
-    #articletitle {
-        border:none;
-        height: 37px;
+    .movie-item {
+        border-color:red;
+    }
+
+    .movietitle {
+        display:flex;
+        height: 30px;
+        width: 200px;
     }
 
     body > footer {
@@ -132,34 +144,48 @@
     font-size:1.2rem;
     }
 
+    .maintitle{
+        background: rgba(18,18,18,.5);
+        border-radius: 1,1;
+    }
+
+    .moviebutton {
+        width:100px;
+    }
+
     .mainbar { 
         display:flex;
         justify-content: center;
-        background-image:url('../assets/MainBanner.png');
+        background-image:url('../assets/sewerimg.png');
         align-items:center;
         text-align:center;
         margin: 0 auto;
+        height:200px;
     }
 
-    #articletextedit {
+    #movietextedit {
         height:100px;
     }
 
-    #comments {
+    #reviews {
         overflow-y:auto;
         max-height:51vh;
     }
 
-    .commenttext {
+    .reviewtext {
         overflow-y:auto;
         max-height:40vh;
     }
 
-    #articletext {
+    #movietext {
+        display:flex;
         overflow-y:auto;
         max-height:31vh;
     }
 
+    .movie-poster {
+        width:200px;
+    }
 
      @media screen and (min-width:800px) and (max-width:1023px) {
         body {
