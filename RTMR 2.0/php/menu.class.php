@@ -15,7 +15,7 @@ class Menu {
 	public function __toString() {
 		$menustr="";
 		foreach($this->menulist as $menuitem) {
-			$menustr.="<li id='menuelement'><a href='".$menuitem['url']."'>".$menuitem['pagename']."</a></li>";
+			$menustr.="<li><button class='menubutton'><a class='menubuttontext' href='".$menuitem['url']."'>".$menuitem['pagename']."</a></button></li>";
 		}
 		return $menustr;
 	}

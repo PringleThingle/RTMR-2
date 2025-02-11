@@ -172,20 +172,20 @@ class Page {
 				continue;
 			}
 		
+			$output .= "<h2 class='movietitle'>" . htmlentities($movie->getTitle()) . "</h2>";
 			$output .= "<div class='movie-item' data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
 		
 			// Display movie poster and movie details in a flex container
 
 			$output .= "<div class='movie-content'>";
 			$output .= "<img class='movie-poster' src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster'>";
-			$output .= "<h2 class='movietitle'>" . htmlentities($movie->getTitle()) . "</h2>";
 			// Menu for edit/delete/add review
 			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
 				$output .= "<ul class='moviemenu'>";
 				if ($this->getUser()->getUserLevel() >= 3) {
-					$output .= "<li><a class='moviebutton' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete</a></li>";
+					$output .= "<li><button class='moviebutton'><a class='moviebuttontext' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete</a></button></li>";
 				}
-				$output .= "<li><a class='moviebutton' href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></li>";
+				$output .= "<li><button class='moviebutton'><a class='moviebuttontext'href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></button></li>";
 				$output .= "</ul>";
 			}
 	
@@ -193,33 +193,39 @@ class Page {
 		
 			// Display reviews
 			$output .= "<section class='reviews'>";
-			$output .= "<h2>Reviews</h2>";
+			$output .= "<h2 class='reviewstitle'>Reviews</h2>";
 		
 			$reviews = $movie->getReviewsForMovie($movie->getID());
 			if (!empty($reviews)) {
 				foreach ($reviews as $review) {
 					$output .= "<div class='review'>";
+					$output .= "<p class='reviewtext'>" . nl2br(htmlentities($review->getText())) . "</p>";
 					$output .= "<strong class = 'reviewer'>". "By " . htmlentities($review->getAuthor()->getUsername()) . " on " . htmlentities($review->getRDate()->format("d-m-Y")) . "</strong>";
-					$output .= "<p>" . nl2br(htmlentities($review->getText())) . "</p>";
-					
-				}
+				$menuItems = "";
 
-				if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-					$output.="<li><a class = 'moviebutton' href='editcomment.php?cid=".$review->getRID()."'>Edit</a></li>";
-					
+				// Check for "Edit" link condition
+				if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+					$menuItems .= "<li><button class='moviebutton'><a class='moviebuttontext' href='editreview.php?rid=" . $review->getRID() . "'>Edit</a></button></li>";
 				}
-
-				if(($this->getStatus() && $this->getUser()->getUserLevel()>=3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
-					$output.="<li><a class = 'moviebutton' href='deletecomment.php?cid=".$review->getRID()."' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></li>";
-					
 				
+				// Check for "Delete" link condition
+				if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
+					$menuItems .= "<li><button class='moviebutton'><a class='moviebuttontext' href='deletereview.php?rid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></button></li>";
+				}
+				
+				// Only wrap in <ul> if at least one item exists
+				if (!empty($menuItems)) {
+					$output .= "<ul class='reviewmenu'>" . $menuItems . "</ul>";
 				}
 
-			} else {
-				$output .= "<p>No reviews yet. Be the first to review!</p>";
+				$output .= "</div>"; // Close review
+
 			}
 			
-			$output .= "</div>"; //Close review item
+			} else {
+				$output .= "<p class='reviewtext'>No reviews yet. Be the first to review!</p>";
+			}
+			
 			$output .= "</section>";  // Close reviews section
 			$output .= "</div>";  // Close movie-item
 		}

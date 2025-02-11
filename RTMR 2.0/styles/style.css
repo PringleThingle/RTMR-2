@@ -2,9 +2,11 @@
     margin:3px;
     padding:3px;
     display:block;
-    border:1px solid #6c3e1f;
+    /* border:1px solid #6c3e1f; */
+    border:none;
     background-color:rgb(18, 18, 18);
     color:white;
+    text-decoration: none;
     }
 
     /* body > *:hover {
@@ -51,8 +53,9 @@
     margin:0px;
     margin-bottom:7px;
     display:block;
+    border:none;
     width:1192.4px;
-    height:70px;
+    height:60px;
     position:sticky;
     top:0px;
     background-color:#5A4027;
@@ -74,16 +77,8 @@
     float:left;
     }
     nav a {
-    padding:10px;
+    padding:5px;
     text-decoration:none;
-    }
-    nav a:link, nav a:visited {
-    color:#fff;
-    background-color:#000;
-    }
-    nav a:hover, nav a:active {
-    color:#000;
-    background-color:#fff;
     }
 
     article > h1 {
@@ -113,16 +108,54 @@
         border:1px;
         color:brown;
         padding:-3px;
-        margin:-3px;
+        margin:-2px;
+        background-color:transparent;
+    }
+
+    .menubutton {
+        width:fit-content;
+        border:none;
+        padding:10px;
+        display:inline;
+        font-size:1.2rem;
+        text-decoration:none;
+        border-radius:4px;
+        background-color:rgb(54, 54, 54);
+    }
+
+    .menubutton:hover {
+        background-color:rgb(64,64,64);
+    }
+
+    .menubuttontext {
+        background-color:transparent;
+        border:none;
     }
 
     .moviemenu {
         align-items: center;
+        background-color:none;
+        margin:-1px;
+        padding:-3px;
+        list-style:none;
+        display:flex;
+        height:auto;
+        width:100%;
+        align-items:middle;
+        border:none;
+        background:none;
+    }
+
+    .reviewmenu {
+        align-items: center;
+        margin-left:-2px;
+        padding:none;
         list-style:none;
         display:flex;
         height:25px;
         width:200px;
         align-items:middle;
+        border:none;
     }
 
     .movie-item > h1 {
@@ -133,28 +166,35 @@
     }
 
     .movie-item {
-        border-color:red;
+        /* border:none; */
         display:flex;
         flex-direction:row;
+        height:396px;
     }
 
     .reviewer {
         border:none;
+        color:gray;
     }
 
     .movietitle {
-        display:block;
-        height: 3rem;
-        line-height: 3rem;
-        font-size: clamp(0.8rem, 2vw, 1.5rem); 
+        display:flex;
+        height: 2.5rem;
+        border:none;
+        margin:none;
+        align-self:center;
+        font-size: 2.5rem; 
         white-space: nowrap; /* Prevent wrapping */
         overflow: hidden;    /* Hide overflow */
         text-overflow: ellipsis;
-        width: 200px;
+        width: auto;
+        background-color:transparent;
+        padding-left:-2px;
+        margin-left:12px;
     }
 
     .movie-content {
-        width: 214px;
+        width: fit-content;
     }
 
     body > footer {
@@ -164,18 +204,35 @@
 
     .maintitle{
         background: rgba(18,18,18,.5);
-        border-radius: 1,1;
+        border-radius: 5px;
     }
 
     .moviebutton {
-        width:100px;
-        border:none;
+        width:fit-content;
         display:inline;
-        margin:5px;
+        margin:4px;
+        padding:0px;
+        font-size:1.2rem;
+        text-decoration:none;
+        border-radius:4px;
+        background-color:#5A4027;
+        margin-top:3px;
+    }
+
+    .moviebutton:hover {
+        background-color:#6c3e1f;
+    }
+
+    .moviebuttontext {
+        border:none;
+        background-color:transparent;
+        padding:none;
+        margin:none;
     }
 
     .mainbar { 
         display:flex;
+        border:none;
         justify-content: center;
         background-image:url('../assets/sewerimg.png');
         align-items:center;
@@ -188,28 +245,43 @@
         height:100px;
     }
 
-    #reviews {
-        overflow-y:auto;
-        max-height:51vh;
+    .reviews {
+        overflow:auto;
+        border:none;
+        top: 10px;
+        height:386px;
+        margin:0px;
+        padding:-3px;
+        margin-top:3px;
+        width:100%;
+    }
+
+    .review {
+        margin-bottom:-3px;
+        margin-top:6px;
+    }
+
+    .reviewstitle {
+        margin-top:-3px;
+        margin-bottom:-2px;
+        margin-left:8px;
     }
 
     .reviewtext {
-        overflow-y:auto;
-        max-height:40vh;
-    }
-
-    #movietext {
-        display:flex;
-        overflow-y:auto;
-        max-height:31vh;
+        overflow-wrap:break-word;
+        overflow:auto;
+        border:none;
     }
 
     .movie-poster {
-        width:200px;
-    }
-
-    .reviews {
-        width:100%;
+        height:335px;
+        border:none;
+        padding:none;
+        margin:none;
+        margin-bottom:1px;
+        margin-left:-1px;
+        margin-top:-5px;
+        background-color:transparent;
     }
 
      @media screen and (min-width:800px) and (max-width:1023px) {
