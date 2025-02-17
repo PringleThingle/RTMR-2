@@ -32,6 +32,16 @@ class MovieCRUD {
 		return $resultset;		
 	}
 
+		public function getCombinedRating($movieID, $style=MYSQLI_ASSOC) {
+		$this->sql="select AVG(userRating) AS averageRating FROM movieReviews WHERE movieID = ?";
+		$this->stmt = self::$db->prepare($this->sql);
+		$this->stmt->bind_param("i",$movieID);
+		$this->stmt->execute();
+		$result = $this->stmt->get_result();
+		$resultset=$result->fetch_all($style);
+		return $resultset;
+	}
+
 	/**************
 	* Returns an associative array where blogID = aid
 	* will return an empty array if no article found

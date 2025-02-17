@@ -26,6 +26,7 @@ try {
 	
 	$result=$page->updateUser($username,$userpass,$email,$userid, $usertype);
 	if($result['update']==1) {
+		header("Location: user.php");
 		echo "User updated<br />";
 	} else {
 		echo "Update Failed:<br>";

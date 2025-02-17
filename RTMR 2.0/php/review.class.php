@@ -35,6 +35,7 @@ class Review {
 		$this->rdate=new DateTime();
 		$this->rauthor=new User();
 		$this->rtext="";
+		$this->rating=0.0;
 	}
 	
 	/**************
@@ -42,6 +43,9 @@ class Review {
 	**************/
     private function setRID($rid){ $this->rid=$rid; }
 	private function setMID($mid){ $this->mid=$mid; }
+
+
+	private function setRating($rating) {$this->rating=util::sanFloat($rating);}
 	
 	/**************
 	* Setter for datetime, accepts a date in string format
@@ -90,6 +94,7 @@ class Review {
 	public function getRDate() { return $this->rdate; }
 	public function getAuthor() { return $this->rauthor; }
 	public function getText() { return $this->rtext; }
+	public function getRating() { return $this->rating; }
 	
 	/**************
 	* Uses commentCRUD to retrieve a recordset of comments as an associative array
@@ -132,7 +137,8 @@ class Review {
         $this->setMID($movie["movieID"]);
 		$this->setRDate($movie["reviewTime"]);
 		$this->setAuthor($movie["reviewPoster"]);
-		$this->setText($movie["reviewText"]);	
+		$this->setText($movie["reviewText"]);
+		$this->setRating($movie["userRating"]);
 	}
 	
 	/**************
@@ -143,7 +149,7 @@ class Review {
 	* returns comment ID if successful, 0/false if unsuccessful with an
 	* error message as an associative array
 	**************/	
-public function addReview($author, $text, $movieID) {
+public function addReview($author, $text, $movieID, $rating) {
     $rid = 0;
     $insert = 0;
     $messages = "";
@@ -156,10 +162,10 @@ public function addReview($author, $text, $movieID) {
         $target = new ReviewCRUD();
         $this->setText($text);
 
-        $insert = $target->addReview($this->getText(), $this->getAuthor()->getUserid(), $movieID);
+        $insert = $target->addReview($this->getText(), $this->getAuthor()->getUserid(), $movieID, $rating);
 
         if ($insert !== 1) { 
-            $messages .= "Add comment failed."; 
+            $messages .= "Add review failed."; 
             $insert = 0;
         } else {
             $resultset = $target->getLastUserReview($this->getAuthor()->getUserid());
@@ -167,6 +173,7 @@ public function addReview($author, $text, $movieID) {
                 $this->setRID($resultset[0]["reviewID"]);
                 $this->setMID($resultset[0]["movieID"]);
                 $this->setRDate($resultset[0]["reviewTime"]);
+				$this->setRating($resultset[0]["userRating"]);
                 $insert = 1;
             } else {
                 $messages .= "Failed to retrieve the last added review.";
@@ -181,10 +188,10 @@ public function addReview($author, $text, $movieID) {
 
 
 	/**************
-	* updates a comment when a user edits a comment
+	* updates a review when a user edits a review
 	**************/	
 
-	public function updateReview($content, $rid) {
+	public function updateReview($content, $rid, $rating) {
 		$messages = "";
 		$update = 0;
 		$found = $this->getReviewById($rid);
@@ -195,7 +202,7 @@ public function addReview($author, $text, $movieID) {
 				$messages .= $this->setText($content);
 			}
 			if ($messages == "") {
-				$updateResult = $target->updateReview($this->getText(), $rid);
+				$updateResult = $target->updateReview($this->getText(), $rid, $rating);
 				$update = $updateResult['update'];
 				$messages = $updateResult['messages'];
 			}

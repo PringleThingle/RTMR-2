@@ -203,6 +203,17 @@ class Movie {
 		return $havemovie;		
 	}
 
+	public function getCombinedRating($mid) {
+		$source = new MovieCRUD();
+		$data = $source->getCombinedRating($mid);
+	
+		if (!empty($data) && isset($data[0]['averageRating'])) {
+			return round($data[0]['averageRating'], 1); // Round to 1 decimal place
+		}
+	
+		return "0"; // Default if no ratings exist
+	}
+
 	/**************
 	* Calls ArticleCrud 
 	* accepts single input paramater of a date

@@ -11,7 +11,7 @@ try {
 
 	$result=$movie->deleteMovie($mid);
 	if($result['update']==1) {
-		echo "Movie deleted<br />";
+		header("Location: home.php");
 	} else {
 		echo "Delete Failed:<br>";
 		echo $result['messages'];

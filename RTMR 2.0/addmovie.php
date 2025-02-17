@@ -4,8 +4,8 @@
 require_once("php/page.class.php");
 require_once("php/view.class.php");
 require_once("php/selectmovie.class.php");
-$page = new Page();
-$pagename = "Movie testing";
+$page = new Page(2);
+$pagename = "Movie Search";
 view::showHead($pagename);
 view::showHeader($pagename);
 ?>
@@ -57,23 +57,19 @@ if ($searchQuery) {
     <style>
         body { font-family: Arial, sans-serif; background-color: #121212; color: white; text-align: center; }
         .container { max-width: 1170px; margin: 20px auto; }
-        .search-box { margin-bottom: 20px; }
-        input[type="text"] { padding: 10px; width: 70%; font-size: 16px; }
-        button { padding: 10px; font-size: 16px; cursor: pointer; }
-        .movie-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
-        .movie-card { background: #1e1e1e; color: white; padding: 10px; border-radius: 10px; width: 250px; max-height: 800px; text-align: left; }
+        .search-box { margin-bottom: 20px; align-items: center; justify-content: center;}
+        input{ padding: 10px; margin-left:215px; width: 700px; font-size: 16px; border:2px solid #5A4027; background-color:rgb(54,54,54)}
         img { width: 95%; border-radius: 10px; }
-        h2 { font-size: 18px; margin: 10px 0; }
-        p { font-size: 14px; margin: 5px 0; max-height: 150px; overflow:scroll;}
-        .rating { font-weight: bold; color: #FFD700; }
+        h2 { font-size: 18px; margin: 10px 0; border-radius:3px; padding-left:10px;}
+        p { font-size: 14px; padding-left:5px; padding-right:10px; margin: 5px 0; max-height: 150px; overflow:scroll; border-radius:3px;}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Movie Search</h1>
         <form method="GET" class="search-box">
-            <input style="color:gray" type="text" name="query" placeholder="Search for a movie..." value="<?= htmlspecialchars($searchQuery ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
-            <button style="color:white" type="submit">Search</button>
+            <input type="text" name="query" placeholder="Search for a movie..." value="<?= htmlspecialchars($searchQuery ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+            <button class="movieselectbutton" style="color:white" type="submit">Search</button>
         </form>
 
         <div class="movie-container" style="padding-top:10px">

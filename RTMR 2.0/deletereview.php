@@ -2,10 +2,12 @@
 require_once("php/page.class.php");
 require_once("php/util.class.php");
 require_once("php/reviewcrud.class.php");
+require_once("php/view.class.php");
 
 $page = new Page(2);
 $review = new Review();
 $currentUser = $page->getUser();
+view::showHead($pagename);
 
 try {
     // Retrieve the Comment ID
@@ -22,7 +24,7 @@ try {
 
             // Delete the Comment
             $result = $review->deleteReview($rid);
-            echo "Review Deleted.";
+            header("Location: home.php");
         } else {
             echo "Error: Unauthorized access.";
         }
@@ -33,4 +35,7 @@ try {
     echo "Error: ", $e->getMessage();
 }
 ?>
+<head>
+<meta http-equiv="refresh" content="0; url=http://example.com/" />
+</head>
 <p><a href="home.php">Back to Home page</a></p>

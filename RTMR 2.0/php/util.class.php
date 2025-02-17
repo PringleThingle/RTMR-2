@@ -86,7 +86,7 @@ class util {
 	public static function sanFloat($input,$minmax=array(null,null)) {
 		$returnvar=0.0;
 		if(util::valFloat($input,$minmax)) {
-			$returnvar=(float)filter_var($input, FILTER_SANITIZE_NUMBER_FLOAT);
+			$returnvar=(float)filter_var($input, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 		}
 		return $returnvar;
 	}

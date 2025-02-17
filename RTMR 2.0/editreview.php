@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
-<h1>Update Article</h1>
 <?php
 require_once("php/page.class.php");
 require_once("php/user.class.php");
@@ -31,11 +30,24 @@ if($found) {
 ?>
 <h1>Edit Review</h1>
 
-<form method="post" action="updatereview.php">
+<form class="addreviewform" method="post" action="updatereview.php">
 <input type="hidden" name="rid" id="rid" value="<?php echo $editreview->getRID();?>" required readonly />
-<label for="reviewtext">Review</label><textarea type="text" id="reviewtext" name="reviewtext" cols="60" rows="8" required><?php echo $editreview->getText();?></textarea><br />
-<button type="submit">Update Review</button>
+<label class="addreviewlabel" for="reviewtext">Review</label><textarea class="addreviewtext" type="text" id="reviewtext" name="reviewtext" cols="60" rows="8" required><?php echo $editreview->getText();?></textarea><br />
+<ul class="reviewRatingul">
+    <li><input type="range" id="userRating" name="userRating" min="0" max="10" step="0.1" value="<?php echo isset($editreview) ? $editreview->getRating() : '5.0'; ?>" required></li>
+    <li class="ratingli"><p class="ratingp"><output class="ratingoutput" id="value"></output></p></li>
+    <li class="ratingli2"><p class="ratingp2">/10</p></li>
+</ul>
+<button class="menubutton" type="submit">Update Review</button>
 </form>
+<script>
+    const value = document.querySelector("#value");
+    const input = document.querySelector("#userRating");
+    value.textContent = input.value;
+    input.addEventListener("input", (event) => {
+    value.textContent = event.target.value;
+    });
+</script>
 <?php
     } else {
         echo "<p>You do not have permission to edit this review.</p>";

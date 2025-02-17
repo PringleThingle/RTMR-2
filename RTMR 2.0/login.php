@@ -9,16 +9,17 @@ view::showHead($pagename);
 view::showHeader($pagename);
 ?>
 </head>
-<body>
+<body class="loginbody">
 <nav>
 <ul class="navbar">
 <?php echo $page->getMenu(); ?>
 </ul>
 </nav>
-<form method="post" action="processlogin.php">
-<label for="username">Username</label><input type="text" name="username" id="username" /><br />
-<label for="password">Password</label><input type="password" name="userpass" id="userpass" /><br />
-<button type="submit">Login</button>
+<img class="loginimg" src="assets/ratimg.png" alt="" height=768 width=768>  
+<form class="loginform" method="post" action="processlogin.php">  
+<label class="loginlabel" for="username">Username</label><input class="logininput" type="text" name="username" id="username" required/><br />
+<label class="loginlabel" for="password">Password</label><input class="logininput" type="password" name="userpass" id="userpass" required /><br />
+<button class = "loginbutton" type="submit">Login</button>
 </form>
 </body>
 </html>

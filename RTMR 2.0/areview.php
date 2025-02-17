@@ -23,12 +23,14 @@ $comment = new Review();
 if(util::posted($_POST['mid']) && util::posted($_POST['reviewText'])) {
 	$mid=util::sanInt($_POST['mid']);
     $text=util::sanStr($_POST['reviewText']);
+    $rating=util::sanFloat(isset($_POST['userRating']) ? floatval($_POST['userRating']) : 0.0);
 	$reviewtoadd=new Review();
-    $result = $reviewtoadd->addReview($page->getUser()->getUserid(), $text, $mid);
+    $result = $reviewtoadd->addReview($page->getUser()->getUserid(), $text, $mid, $rating);
 
     if ($result['insert'] == 1) { 
-        echo "<h2>Review Added</h2>";
-        echo $page->displayMovies();
+        header("Location: home.php");
+        // echo "<h2>Review Added</h2>";
+        // echo $page->displayMovies();
     } else { 
         echo "<h2>Add Failed</h2>";
         if (is_array($result) && isset($result['messages'])) {

@@ -45,15 +45,15 @@ class ReviewCRUD {
 	/**************
 	* adds a comment into the database, returns 1 on success, 0 on failure
 	**************/	
-    public function addReview($text, $poster, $movieID) {
-        $this->sql = "INSERT INTO movieReviews (reviewText, reviewPoster, movieID) VALUES (?, ?, ?)";
+    public function addReview($text, $poster, $movieID, $rating) {
+        $this->sql = "INSERT INTO movieReviews (reviewText, reviewPoster, movieID, userRating) VALUES (?, ?, ?, ?)";
         $this->stmt = self::$db->prepare($this->sql);
     
         if (!$this->stmt) {
             return 0; 
         }
     
-        $this->stmt->bind_param("sii", $text, $poster, $movieID);
+        $this->stmt->bind_param("siid", $text, $poster, $movieID, $rating);
     
         if (!$this->stmt->execute()) {
             return 0; 
@@ -65,6 +65,7 @@ class ReviewCRUD {
 	/**************
 	* Returns the last comment a specific user made
 	**************/	
+
 	public function getLastUserReview($poster, $style=MYSQLI_ASSOC) {
 		$this->sql="select * from movieReviews where reviewPoster=? order by reviewTime desc limit 1";
 		$this->stmt = self::$db->prepare($this->sql);
@@ -90,15 +91,15 @@ class ReviewCRUD {
 	/**************
 	* Updates a comment in the database when a user edits 
 	**************/	
-	public function updateReview($text, $rid) {
-		$this->sql = "UPDATE movieReviews SET reviewText=? WHERE reviewID=?;";
+	public function updateReview($text, $rid, $rating) {
+		$this->sql = "UPDATE movieReviews SET reviewText=?, userRating=? WHERE reviewID=?;";
 		$this->stmt = self::$db->prepare($this->sql);
 	
 		if (!$this->stmt) {
 			return ['update' => 0, 'messages' => "Prepare failed: " . self::$db->error];
 		}
 	
-		$this->stmt->bind_param("si", $text, $rid);
+		$this->stmt->bind_param("sdi", $text, $rating, $rid);
 		$result = $this->stmt->execute();
 	
 		if ($result) {

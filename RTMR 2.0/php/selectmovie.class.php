@@ -51,14 +51,14 @@ class SelectMovie {
             <p><strong>Release Date:</strong> {$this->releaseDate}</p>
             <p class='rating'>⭐ {$this->rating}/10</p>
             <p>{$this->description}</p>
-            <form method='POST' action='amovie.php'>
+            <form class='selectform' method='POST' action='amovie.php'>
                 <input type='hidden' name='mid' value='{$this->id}'>
                 <input type='hidden' name='title' value='{$this->title}'>
                 <input type='hidden' name='releaseDate' value='{$this->releaseDate}'>
                 <input type='hidden' name='posterLink' value='{$this->posterPath}'>
                 <input type='hidden' name='description' value='{$this->description}'>
                 <input type='hidden' name='director' value='{$this->director}'>
-                <button style=\"color:white\" type='submit'>Add Movie</button>
+                <button class='movieselectbutton' style=\"color:white\" type='submit'>Add Movie</button>
             </form>
         </div>";
     }

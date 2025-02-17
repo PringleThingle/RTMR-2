@@ -195,8 +195,8 @@ class User {
 	**************/
 	public function __toString() {
 		$output="";
-		$output.="Username: ".$this->getUsername()."<br />";
-		$output.="Email: ".$this->getEmail()."<br />";
+		$output.="<p class='usertext'>Username: ".$this->getUsername()."</p><br />";
+		$output.="<p class='usertext'>Email: ".$this->getEmail()."</p><br />";
 		$typedesc="Anonymous";
 		switch($this->getUserLevel()) {
 			case 1: $typedesc="Suspended";
@@ -206,7 +206,7 @@ class User {
 			case 3: $typedesc="Admin";
 					break;
 		}
-		$output.="Account Type: ".$typedesc."<br />";
+		$output.="<p class='usertext'>Account Type: ".$typedesc."</p><br />";
 		return $output;
 	}
 }

@@ -180,15 +180,19 @@ class Page {
 			$output .= "<div class='movie-content'>";
 			$output .= "<img class='movie-poster' src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster'>";
 			// Menu for edit/delete/add review
-			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
-				$output .= "<ul class='moviemenu'>";
+			$output .= "<ul class='moviemenu'>";
+			if ($this->getStatus() && $this->getUser()->getUserLevel() >= 0) {
+				
 				if ($this->getUser()->getUserLevel() >= 3) {
 					$output .= "<li><button class='moviebutton'><a class='moviebuttontext' href='deletemovie.php?mid=" . $movie->getID() . "' onclick='return confirm(\"Are you sure you want to delete this movie?\");'>Delete</a></button></li>";
 				}
+				if ($this->getStatus() && $this->getUser()->getUserLevel() >= 2) {
 				$output .= "<li><button class='moviebutton'><a class='moviebuttontext'href='addreview.php?mid=" . $movie->getID() . "'>Add Review</a></button></li>";
-				$output .= "</ul>";
+				}
+				
 			}
-	
+			$output .= "<li><p class='homerating'>{$movie->getCombinedRating($movie->getID())}⭐</p></li>";
+			$output .= "</ul>";
 			$output .= "</div>";  // Close movie-content
 		
 			// Display reviews
@@ -200,7 +204,10 @@ class Page {
 				foreach ($reviews as $review) {
 					$output .= "<div class='review'>";
 					$output .= "<p class='reviewtext'>" . nl2br(htmlentities($review->getText())) . "</p>";
-					$output .= "<strong class = 'reviewer'>". "By " . htmlentities($review->getAuthor()->getUsername()) . " on " . htmlentities($review->getRDate()->format("d-m-Y")) . "</strong>";
+					$output .= "<ul class='userreviewinfo'>";
+					$output .= "<li class='userreviewli'><p class='userrating'>{$review->getRating()}⭐  </p></li>";
+					$output .= "<li class='userreviewli'><strong class = 'reviewer'>By " . htmlentities($review->getAuthor()->getUsername()) . " on " . htmlentities($review->getRDate()->format("d-m-Y")) . "</strong></li>";
+					$output .= "</ul>";
 				$menuItems = "";
 
 				// Check for "Edit" link condition
@@ -223,7 +230,7 @@ class Page {
 			}
 			
 			} else {
-				$output .= "<p class='reviewtext'>No reviews yet. Be the first to review!</p>";
+				$output .= "<p class='noreviewtext'>No reviews yet. Be the first to review!</p>";
 			}
 			
 			$output .= "</section>";  // Close reviews section

@@ -3,10 +3,26 @@
     padding:3px;
     display:block;
     /* border:1px solid #6c3e1f; */
-    border:none;
     background-color:rgb(18, 18, 18);
     color:white;
     text-decoration: none;
+    font-family: Poppins-regular;
+    font-weight: 500;
+    font-style: normal;
+    }
+
+    textarea {
+        resize: none;
+      }
+
+    @font-face {
+        font-family:'Poppins-medium';
+        src: url("../fonts/Poppins-Medium.ttf") format('truetype');
+    }
+
+    @font-face {
+        font-family:'Poppins-regular';
+        src: url("../fonts/Poppins-Regular.ttf") format('truetype');
     }
 
     /* body > *:hover {
@@ -156,6 +172,7 @@
         width:200px;
         align-items:middle;
         border:none;
+        background-color:transparent;
     }
 
     .movie-item > h1 {
@@ -166,20 +183,30 @@
     }
 
     .movie-item {
-        /* border:none; */
         display:flex;
+        border:2px solid #5A4027;
         flex-direction:row;
-        height:396px;
+        height:fit-content;
+        background-color:rgb(10,10,10);
+        padding-top:6px;
+        border-radius:5px;
     }
 
     .reviewer {
         border:none;
         color:gray;
+        margin:0px;
+        padding:0px;
+        background-color:transparent;
+        font-size:1.2rem;
+
     }
 
     .movietitle {
+        font-family: Poppins-medium;
+        font-weight: 500;
         display:flex;
-        height: 2.5rem;
+        height: 3rem;
         border:none;
         margin:none;
         align-self:center;
@@ -195,6 +222,7 @@
 
     .movie-content {
         width: fit-content;
+        background-color:transparent;
     }
 
     body > footer {
@@ -210,13 +238,17 @@
     .moviebutton {
         width:fit-content;
         display:inline;
+        white-space: nowrap;
         margin:4px;
-        padding:0px;
-        font-size:1.2rem;
+        padding-top:0px;
+        padding-bottom:0px;
+        padding-left:6px;
+        padding-right:6px;
         text-decoration:none;
         border-radius:4px;
         background-color:#5A4027;
         margin-top:3px;
+        border:none;
     }
 
     .moviebutton:hover {
@@ -225,9 +257,10 @@
 
     .moviebuttontext {
         border:none;
+        padding:0px;
         background-color:transparent;
-        padding:none;
-        margin:none;
+        margin:0px;
+        font-size:1.4rem;
     }
 
     .mainbar { 
@@ -249,28 +282,96 @@
         overflow:auto;
         border:none;
         top: 10px;
-        height:386px;
+        height:370px;
         margin:0px;
         padding:-3px;
         margin-top:3px;
         width:100%;
+        background-color:transparent;
     }
 
     .review {
         margin-bottom:-3px;
-        margin-top:6px;
+        margin-top:0px;
+        padding-top:0px;
+        background-color:transparent;
     }
 
     .reviewstitle {
         margin-top:-3px;
         margin-bottom:-2px;
         margin-left:8px;
+        background-color:transparent;
     }
 
     .reviewtext {
         overflow-wrap:break-word;
         overflow:auto;
         border:none;
+        background-color:transparent;
+        margin-bottom:0px;
+    }
+
+    .loginbody {
+        background-color:transparent;
+    }
+
+    .logininput {
+        border-style:solid;
+        box-shadow: none;
+        border-color: rgb(54,54,54);
+        background-color:rgb(64,64,64);
+        border-radius:3px;
+        height:25px;
+        font-size:1.5rem;
+        width:180px;
+    }
+
+    .loginlabel {
+        padding:0px;
+        font-size:1.5rem;
+        background-color:transparent;
+    }
+
+    .loginform {
+        position:relative;
+        background-color:transparent;
+        width:fit-content;
+        padding:10px;
+        border-radius:10px;
+        left:495px;
+        top:130px;
+    }
+
+    .loginimg {
+        position:absolute;
+        margin-top:-150px;
+        margin-left:260px;
+        background-color:transparent;
+    }
+
+    .loginbutton {
+        padding:10px;
+        background-color:transparent;
+        font-size:1.5rem;
+        width:fit-content;
+        background-color:rgb(54, 54, 54);
+        border:none;
+        border-radius:5px;
+        margin-top:10px;
+        margin-left:60px;
+    }
+
+    .loginbutton:hover {
+        background-color:rgb(64,64,64);
+    }
+
+    .noreviewtext {
+        overflow-wrap:break-word;
+        overflow:auto;
+        border:none;
+        margin-left:8px;
+        background-color:transparent;
     }
 
     .movie-poster {
@@ -281,6 +382,197 @@
         margin-bottom:1px;
         margin-left:-1px;
         margin-top:-5px;
+        background-color:transparent;
+    }
+
+    .addreviewbody {
+        background-color:transparent;
+    }
+
+    .addreviewinput {
+        border-style:solid;
+        box-shadow: none;
+        border-color: rgb(54,54,54);
+        background-color:rgb(64,64,64);
+        border-radius:3px;
+        height:25px;
+        font-size:1.5rem;
+        width:180px;
+    }
+
+    .addreviewlabel {
+        padding:0px;
+        font-size:1.5rem;
+        background-color:transparent;
+    }
+
+    .addreviewform {
+        background-color:#5A4027;
+        position:relative;
+        width:fit-content;
+        padding:10px;
+        border-radius:10px;
+    }
+
+    .addreviewtext {
+        border:1px solid #5A4027;
+        background-color:rgb(54,54,54);
+    }
+
+    .userinfo {
+        background-color:rgb(64,64,64);
+        padding:10px;
+        width:fit-content;
+    }
+
+    .usertext {
+        background-color:transparent;
+        font-size:1.5rem;
+    }
+
+    .usertitle {
+        background-color:rgb(54, 54, 54);
+        width:fit-content;
+        padding-left:10px;
+        padding-right:10px;
+        border-radius:5px;
+    }
+
+    .edituserinput {
+        border-style:solid;
+        box-shadow: none;
+        border-color: rgb(54,54,54);
+        background-color:rgb(84,84,84);
+        border-radius:3px;
+        height:25px;
+        font-size:1.5rem;
+        width:180px;
+    }
+
+    .edituserbutton {
+        padding:7px;
+        background-color:transparent;
+        font-size:1.5rem;
+        width:fit-content;
+        background-color:rgb(54, 54, 54);
+        border:none;
+        border-radius:5px;
+        padding-top:5px;
+    }
+
+    .movie-container { 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: center; 
+        gap: 10px; 
+        margin-top: 20px; 
+    }
+    .movie-card { 
+        background: #1e1e1e; 
+        color: white; 
+        padding: 10px; 
+        padding-bottom:5px;
+        border-radius: 10px; 
+        width: 250px; 
+        max-height: 760px; 
+        text-align: left; 
+    }
+
+    .movieselectbutton {
+        width:fit-content;
+        display:inline;
+        font-size:1.6rem;
+        margin:4px;
+        padding-top:0px;
+        padding-bottom:0px;
+        padding-left:6px;
+        padding-right:6px;
+        text-decoration:none;
+        border-radius:4px;
+        background-color:#5A4027;
+        margin-top:3px;
+        border:none;
+    }
+
+    .movieselectbutton:hover {
+        background-color:#6c3e1f;
+    }
+
+    .rating { 
+        font-weight: bold; color: #FFD700; 
+    }
+
+    
+    .edituserbutton:hover {
+        background-color:rgb(64,64,64);
+    }
+
+    .selectform { 
+        background-color:transparent;
+    }
+
+    .reviewRatingul {
+        background-color:transparent;
+        display:flex;
+        flex-direction:row;
+    }
+
+    .homerating {
+        background-color:transparent;
+        margin-right:0px;
+        padding-right:0px;
+        color: #FFD700;
+    }
+    
+    .ratingli {
+        background-color:transparent;
+        margin-right:0px;
+        padding-right:0px;
+    }
+
+    .ratingp {
+        background-color:transparent;
+        padding:0px;
+        margin:0px;
+        font-size:1.4rem;
+    }
+
+    .ratingli2 {
+        background-color:transparent;
+    }
+
+    .ratingp2 {
+        background-color:transparent;
+        padding:3px;
+        margin:3px;
+        font-size:1.4rem;
+        padding-left:0px;
+        margin-left:0px;
+    }
+
+    .ratingoutput {
+        background-color:transparent;
+        font-size:1.4rem;
+        padding-right:0px;
+        margin-right:0px;
+    }
+
+    .userreviewinfo {
+        background-color:transparent;
+        display:flex;
+        flex-direction:row;
+        margin-top:0px;
+    }
+
+    .userrating {
+        background-color:transparent;
+        padding:0px;
+        margin:0px;
+        color:gray;
+        font-size:1.2rem;
+    }
+
+    .userreviewli {
         background-color:transparent;
     }
 

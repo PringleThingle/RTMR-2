@@ -15,11 +15,12 @@ view::showHeader($pagename);
 <?php echo $page->getMenu(); ?>
 </ul>
 </nav>
-<form id="regform" method="post" action="reguser.php">
-<label for="username">Username</label><input type="text" id="username" name="username" required /><br />
-<label for="email">Email</label><input type="email" id="email" name="email" required /><br />
-<label for="userpass">Password</label><input type="password" id="userpass" name="userpass" required /><br />
-<button id="submitbutton" name="submitbutton" type="submit">Register</button>
+<img class="loginimg" src="assets/ratimg.png" alt="" height=768 width=768>  
+<form class="loginform" id="regform" method="post" action="reguser.php">
+<label class="loginlabel" for="username">Username</label><input class="logininput" type="text" id="username" name="username" required /><br />
+<label class="loginlabel" for="email">Email</label><input class="logininput" type="email" id="email" name="email" required /><br />
+<label class="loginlabel" for="userpass">Password</label><input class="logininput" type="password" id="userpass" name="userpass" required /><br />
+<button class="loginbutton" id="submitbutton" name="submitbutton" type="submit">Register</button>
 </form>
 </body>
 <script src="js/userform.js"></script>

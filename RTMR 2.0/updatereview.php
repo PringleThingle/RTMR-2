@@ -23,10 +23,13 @@ try {
             // Retrieve the updated text
             $text = (util::posted($_POST['reviewtext']) ? $_POST['reviewtext'] : "");
 
+            $rating=util::sanFloat(isset($_POST['userRating']) ? floatval($_POST['userRating']) : 0.0);
+
             // Update the Comment
-            $result = $review->updateReview($text, $rid);
+            $result = $review->updateReview($text, $rid, $rating);
 
             if ($result['update'] == 1) {
+                header("Location: home.php");
                 echo "Review updated<br />";
             } else {
                 echo "Update Failed: " . $result['messages'] . "<br>";

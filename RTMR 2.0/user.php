@@ -15,11 +15,12 @@ view::showHeader($pagename);
 <?php echo $page->getMenu(); ?>
 </ul>
 </nav>
-<div>
+<div class="userinfo">
+<h2 class="usertitle">User information</h2>
 <?php
 echo $page->getUser(); 
 ?>
 </div>
-<p><a href="editself.php">Edit Details</a></p>
+<button class="edituserbutton"><a class="menubuttontext" href="editself.php">Edit Details</a></button>
 </body>
 </html>
