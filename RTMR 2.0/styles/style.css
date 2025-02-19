@@ -467,6 +467,7 @@
         gap: 10px; 
         margin-top: 20px; 
     }
+
     .movie-card { 
         background: #1e1e1e; 
         color: white; 
@@ -477,6 +478,8 @@
         max-height: 760px; 
         text-align: left; 
     }
+
+    
 
     .movieselectbutton {
         width:fit-content;

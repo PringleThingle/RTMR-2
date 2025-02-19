@@ -61,7 +61,7 @@ if ($searchQuery) {
         input{ padding: 10px; margin-left:215px; width: 700px; font-size: 16px; border:2px solid #5A4027; background-color:rgb(54,54,54)}
         img { width: 95%; border-radius: 10px; }
         h2 { font-size: 18px; margin: 10px 0; border-radius:3px; padding-left:10px;}
-        p { font-size: 14px; padding-left:5px; padding-right:10px; margin: 5px 0; max-height: 150px; overflow:scroll; border-radius:3px;}
+        p { font-size: 14px; padding-left:5px; padding-right:10px; margin: 5px 0; max-height: 150px; overflow-y:auto; overflow-x:auto; border-radius:3px;}
     </style>
 </head>
 <body>
