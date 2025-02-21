@@ -8,6 +8,10 @@ class SelectMovie {
     private $director;
     private $rating;
 
+    /*
+    This class is used to create and display each movie object when a user searches for a movie
+    */
+
     public function __construct($id, $title, $releaseDate, $description, $posterPath, $director = "Unknown", $rating = 0) {
         $this->id = $id;
         $this->title = $title;
@@ -18,6 +22,9 @@ class SelectMovie {
         $this->rating = $rating;
     }
 
+    /*
+    Class getters
+    */
     public function getId() {
         return $this->id;
     }
@@ -42,7 +49,7 @@ class SelectMovie {
         return $this->rating;
     }
 
-    // Function to display the movie card
+    // Function to display the movie card using information fetched from TMDB api
     public function displayMovie() {
         return "
         <div class='movie-card'>

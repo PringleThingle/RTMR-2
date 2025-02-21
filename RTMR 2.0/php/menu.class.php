@@ -1,4 +1,7 @@
+
 <?php
+/* These menu classes are used to display the relevant menu buttons depending on the users permissions
+*/
 require_once("menucrud.class.php");
 class Menu {
 	private $menulist=[];

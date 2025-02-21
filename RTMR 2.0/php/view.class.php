@@ -16,9 +16,6 @@ class view
         <html lang="en-GB" dir="ltr">
 
         <head>
-            <?php
-
-            ?>
             <meta charset="UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />

@@ -10,7 +10,7 @@ class ReviewCRUD {
 	
 
 	/**************
-	* Returns an array of comments associated with a specific article ID ($aid)
+	* Returns an array of reviews associated with a specific movie ID ($mid)
 	**************/	
 	public function getReviewsForMovie($mid, $style=MYSQLI_ASSOC) {
 		$this->sql="select * from movieReviews where movieID = ?";
@@ -23,7 +23,7 @@ class ReviewCRUD {
 	}
 
 	/**************
-	* Returns a comment from a specific comment ID ($cid)
+	* Returns a review from a specific review ID ($rid)
 	**************/	
 	public function getReviewById($rid, $style = MYSQLI_ASSOC) {
 		$rid = (int)$rid;
@@ -43,7 +43,7 @@ class ReviewCRUD {
 	}
 
 	/**************
-	* adds a comment into the database, returns 1 on success, 0 on failure
+	* adds a review into the database, returns 1 on success, 0 on failure
 	**************/	
     public function addReview($text, $poster, $movieID, $rating) {
         $this->sql = "INSERT INTO movieReviews (reviewText, reviewPoster, movieID, userRating) VALUES (?, ?, ?, ?)";
@@ -63,7 +63,7 @@ class ReviewCRUD {
     }
 
 	/**************
-	* Returns the last comment a specific user made
+	* Returns the last review a specific user made
 	**************/	
 
 	public function getLastUserReview($poster, $style=MYSQLI_ASSOC) {
@@ -77,7 +77,7 @@ class ReviewCRUD {
 	}
 
 	/**************
-	* Returns the last comment that was made
+	* Returns the last review that was made
 	**************/	
     public function getLastReview($style=MYSQLI_ASSOC) {
 		$this->sql="select * from movieReviews order by reviewTime desc limit 1";
@@ -89,7 +89,7 @@ class ReviewCRUD {
 	}
 
 	/**************
-	* Updates a comment in the database when a user edits 
+	* Updates a review in the database when a user edits 
 	**************/	
 	public function updateReview($text, $rid, $rating) {
 		$this->sql = "UPDATE movieReviews SET reviewText=?, userRating=? WHERE reviewID=?;";
@@ -110,7 +110,7 @@ class ReviewCRUD {
 	}
 
 	/**************
-	* Deletes existing article, returns 1 on success, error message on fail
+	* Deletes existing review, returns 1 on success, error message on fail
 	**************/		
 	public function deleteReview($rid) {
 		$this->sql = "DELETE FROM movieReviews WHERE reviewID = ?;";

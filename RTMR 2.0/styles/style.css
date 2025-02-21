@@ -97,29 +97,6 @@
     text-decoration:none;
     }
 
-    article > h1 {
-    flex:1 100%;
-    }
-    main > article, main > article > section, main > article >
-    div, .comments, .comments aside {
-    border:1px solid #5A4027;
-    margin:2px;
-    }
-
-    main > article {display:flex;flex-flow: row wrap;}
-    main > article, main > article > section, main > article > div {flex:1
-    100%; }
-    main > article div {
-        flex: 3 0px; 
-        order:1; 
-        overflow-wrap: break-word;
-        word-wrap: break-word; 
-        white-space: pre-wrap;
-        max-width:55%;
-        max-height:60vh;
-        overflow-y:auto;
-    }
-
     li {
         border:1px;
         color:brown;

@@ -3,34 +3,30 @@
 require_once("moviecrud.class.php");
 require_once("user.class.php");
 require_once("directorcrud.class.php");
-//require_once("comment.class.php");
 require_once("util.class.php");
 
 /**************
-* Article class
+* Movie class
 **************/
 class Movie {
 	/***************
 	* mid - serial article id
-	* mdate - instance of DateTime, when article created
-	* mrating - overall review based on users reviews
+	* mdate - instance of DateTime, when movie was actually made
+	* wdate - date that the movie was added by a user
 	* mdirector - director of a movie
-	* atitle - article title
-	* acontent - main body of article textdomain
-	* comments - an array for instances of Comment
+	* mtitle - movie title
+	* mdescription - description of the movie from TMDB (Not currently used but may be in future)
+	* mposterlink - movie poster link from TMDB (used to display posters)
 	***************/
-	private $mid, $mdate, $wdate, $mrating, $mdirector, $mtitle, $mdescription, $mposterlink;
-	/* 
-	* Note that the Comment class has not been provided, but the comments
-	* array is being used to help you see where the comments would be accessed and manipulated
-	*/
+	private $mid, $mdate, $wdate, $mdirector, $mtitle, $mdescription, $mposterlink;
+
 	private $reviews=[];
 	
 	/**************
-	* Creates a 'blank' article, in this implementation articles are
-	* instantiated blank, then initialised using initArticle
-	* initArticle is called by one of the methods which work with
-	* the articleCRUD class. This has been done largely to cope with
+	* Creates a 'blank' movie, in this implementation movies are
+	* instantiated blank, then initialised using initMovie
+	* initMovie is called by one of the methods which work with
+	* the movieCRUD class. This has been done largely to cope with
 	* PHP's inability to handle function overloading for constructors
 	**************/
 	public function __construct() {
@@ -62,12 +58,15 @@ class Movie {
 	private function setPosterLink($mposterlink){ $this->mposterlink=$mposterlink; }
 	
 	/**************
-	* Setter for datetime, accepts a date in string format
+	* Setter for Movie Date, accepts a date in string format
 	**************/	
 	private function setMDate($date) { 
 		$this->mdate=DateTime::createFromFormat("Y-m-d", $date);
 		}
 
+	/**************
+	* Setter for Watched Date, accepts a date in string format
+	**************/	
 	private function setWDate($date) {
 		$this->wdate = DateTime::createFromFormat("Y-m-d H:i:s", $date);
 		if ($this->wdate === false) {
@@ -77,17 +76,17 @@ class Movie {
 	}
 	
 	/**************
-	* Setter for article title, uses string sanitiser method
+	* Setter for movie title, uses string sanitiser method
 	**************/
 	private function setTitle($title) {$this->mtitle=util::sanStr($title);}
 	
 	/**************
-	* Setter for article content, uses string sanitiser method
+	* Setter for movie description, uses string sanitiser method
 	**************/
 	private function setDescription($content) {$this->mdescription=util::sanStr($content);}
 	
 	/**************
-	* Remove all current comments in comments array
+	* Remove all current reviews in reviews array
 	**************/
 	public function clearReviews() {$this->reviews=[];}
 	
@@ -104,8 +103,8 @@ class Movie {
 	public function getDirectorID() { return $this->mdirector;}
 	
 	/**************
-	* Uses commentCRUD to retrieve a recordset of comments as an associative array
-	* instantiates Comment for each row and adds to the comments array
+	* Uses reviewCRUD to retrieve a recordset of reviews as an associative array
+	* instantiates Review for each row and adds to the reviews array
 	**************/
 	public function getReviewsForMovie($mid) {
 		$source = new ReviewCRUD();
@@ -115,17 +114,17 @@ class Movie {
 		if (count($data) > 0) {
 			foreach ($data as $row) {
 				$review = new Review();
-				$review->initReview($row); // Assuming $row contains the data for initComment
-				$reviews[] = $review; // Add the processed comment to the list
+				$review->initReview($row); 
+				$reviews[] = $review; 
 			}
 		}
 	
-		return $reviews; // Return the list of comments
+		return $reviews; // Return the list of reviews
 	}
 	
 	/**************
-	* sets article's attributes from a retrieved associative array of an article
-	* this will call getCommentsForArticle to initialise the comments
+	* sets movie's attributes from a retrieved associative array of a movie
+	* this will call getReviewsForMovie to initialise the reviews
 	**************/
 	public function initMovie($movie) {
 		$this->setID($movie["movieID"]);
@@ -139,9 +138,9 @@ class Movie {
 	}
 	
 	/**************
-	* Uses ArticleCRUD to retrieve an associative array of an article by articleID
-	* if the article is found returns true, otherwise returns false
-	* calls initArticle should the article be found
+	* Uses MovieCRUD to retrieve an associative array of a movie by movieID
+	* if the movie is found returns true, otherwise returns false
+	* calls initMovie should the movie be found
 	**************/
 	public function getMovieById($mid) {
 		$havemovie=false;
@@ -155,12 +154,6 @@ class Movie {
 		return $havemovie;
 	}
 
-		/**************
-	* Uses ArticleCRUD to retrieve an associative array of an article by articleID
-	* if the article is found returns true, otherwise returns false
-	* calls initArticle should the article be found
-	**************/
-
 	public function getDirectorByID($id) {
 		$havedirector=false;
 		$source=new DirectorCRUD();
@@ -172,6 +165,9 @@ class Movie {
 		return $havedirector;
 	}
 
+	/**************
+	* Returns a directors name from a movieID
+	**************/
 	public function getDirectorNameByMovieID($mid) {
 		$source = new DirectorCRUD();
 		$directorName = $source->getDirectorNameByMovieID($mid);
@@ -186,9 +182,9 @@ class Movie {
 	
 	
 	/**************
-	* Calls ArticleCRUD 
+	* Calls MovieCRUD 
 	* accepts single input paramater of a date
-	* Calls initArticle and returns true if article found
+	* Calls initMovie and returns true if a movie is found
 	* otherwise returns false
 	**************/
 	public function getNextMovie($start) {
@@ -203,21 +199,26 @@ class Movie {
 		return $havemovie;		
 	}
 
+	/**************
+	* Calls MovieCRUD 
+	* takes in a movieID and returns an average of all the ratings for that movie
+	* or returns 0 if no ratings are found
+	**************/
 	public function getCombinedRating($mid) {
 		$source = new MovieCRUD();
 		$data = $source->getCombinedRating($mid);
 	
 		if (!empty($data) && isset($data[0]['averageRating'])) {
-			return round($data[0]['averageRating'], 1); // Round to 1 decimal place
+			return round($data[0]['averageRating'], 1); // Return average rating
 		}
 	
 		return "0"; // Default if no ratings exist
 	}
 
 	/**************
-	* Calls ArticleCrud 
+	* Calls MovieCrud 
 	* accepts single input paramater of a date
-	* Calls initArticle and returns true if article found
+	* Calls initMovie and returns true if movie is found
 	* otherwise returns false
 	**************/	
 	public function getPrevMovie($start) {
@@ -233,12 +234,10 @@ class Movie {
 	}
 
 	/**************
-	* Accepts 3 input parameters to create a new Article
-	* Author is set using setAuthor, accepts an id or instance of author
-	* Calls ArticleCrud addArticle and getLastUserArticle to add new article
-	* if successful article ID and time set from database
-	* returns article ID if successful, 0/false if unsuccessful with an
-	* error message as an associative array
+	* Accepts 6 input parameters to create a new Movie
+	* Calls MovieCrud addMovie to add the new movie
+	* if successful the watched date is set automatically in the database
+	* returns an error message if add fails
 	**************/	
 
 	public function addMovie($mid, $title, $description, $releaseDate, $posterLink, $director) {
@@ -246,7 +245,6 @@ class Movie {
 		$messages = "";
 	
 		if ($this->setID($mid)) {
-			echo($releaseDate);
 			$target = new MovieCRUD();
 			$this->setID($mid); 
 			$this->setTitle($title);
@@ -258,7 +256,7 @@ class Movie {
 			$insert = $target->addMovie($this->getID(), $this->getTitle(), $this->getDescription(), $this->getMDate(), $this->getPosterLink(), $this->getDirectorID());
 	
 			if ($insert !== 1) {
-				$messages .= $insert;  // Collect the error message
+				$messages .= $insert;
 				$insert = 0;
 			}
 		} else {
@@ -268,35 +266,10 @@ class Movie {
 		return ['insert' => $insert, 'messages' => $messages];
 	}
 	
-
 	/**************
-	* If the current article is value (aid!=-1) this will
-	* update the associate articles title and content. Uses
-	* ArticleCRUD updateArticle method.
-	* if successful will return an associative array indicating successful
-	* else will return an error message
-	**************/	
-	// public function updateMovie($title,$content,$aid) {
-	// 	$messages="";
-	// 	$update=0;
-	// 	$found=$this->getArticleById($aid);
-	// 	$target=new ArticleCRUD();
-	// 	if($found) {
-	// 		if(util::posted($title)){$messages.=$this->setTitle($title);}
-	// 		if(util::posted($content)){$messages.=$this->setContent($content);}
-	// 		if($messages=="") {
-	// 			$update=$target->updateArticle($this->getTitle(), $this->getContent(), $aid);
-	// 			if($update!=1) {$messages=$update;$update=0;}
-	// 		}			
-	// 	}
-	// 	$result=['update'=>$update,'messages'=>$messages];
-	// 	return $result;
-	// }
-	
-	/**************
-	* If the current article is value (aid!=-1) this will
-	* delete the associate article. Uses
-	* ArticleCRUD deleteArticle method.
+	* If the current article is value (mid!=-1) this will
+	* delete the associated movie. 
+	* Uses MovieCRUD deleteMovie method.
 	* if successful will return an associative array indicating successful
 	* else will return an error message
 	**************/		
@@ -316,10 +289,10 @@ class Movie {
 	}
 
 	/**************
-	* Converts the Article object and any Comment objects in the comments
+	* Converts the Movie object and any Review objects in the reviews
 	* array into an associative array representation
-	* Uses the Comment class toArray method
-	* Any object elements, like author or date, are converted to string
+	* Uses the Review class toArray method
+	* Any object elements like date are converted to string
 	* representations
 	**************/		
 	public function toArray() {
@@ -341,8 +314,8 @@ class Movie {
 		return $outarray;
 	}
 	/**************
-	* toString method converts the article and associated 
-	* comments to HTML output
+	* toString method converts the movie and associated 
+	* reviews to HTML output
 	**************/		
 	public function __toString() {
 		$output="<movie id='a".htmlentities($this->getID())."'>";
@@ -352,7 +325,7 @@ class Movie {
 		foreach($this->reviews as $review) {
 			$output.=$review;						
 		}
-		$output.="</article>";
+		$output.="</movie>";
 		return $output;
 	}
 	

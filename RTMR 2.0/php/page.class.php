@@ -113,24 +113,24 @@ class Page {
 	}	
 
 	/************
-	* Empty article array
+	* Empty movie array
 	************/
 	public function clearMovies() { $this->movies=[];}
 
 	/************
-	* Return all articles in article array
+	* Return all movies in movie array
 	************/
 	public function getMovieList() { return $this->movies;}
 	
 	/************
-	* Uses ArticleCRUD class to retrieve an associative array of articles
-	* associative array Uses Article class to create an array of instances
-	* of Article, stored in the article array
+	* Uses MovieCRUD class to retrieve an associative array of movies
+	* associative array Uses Movie class to create an array of instances
+	* of Movie, stored in the movie array
 	* accepts 3 parameters
 	* @param start start date of query as a string
-	* @param qty maximum number of articles to return
-	* @param direction default DESC, order to retrieve articles
-	* @return havearticles 0 if no articles found, >0 if articles found
+	* @param qty maximum number of movies to return
+	* @param direction default DESC, order to retrieve movies
+	* @return havemovies 0 if no movies found, >0 if movies found
 	************/	
 	public function getMovies($start,$qty,$direction='DESC') {
 		$havemovies=0;
@@ -148,7 +148,7 @@ class Page {
 	}
 
 	/*************
-	* returns an article from an article id ($aid)
+	* returns a movie from a movie id ($mid)
 	**************/
 
 	public function getMovie($mid) {
@@ -160,7 +160,7 @@ class Page {
 	}
 	
 	/*************
-	* creates and returns a string from the articles stored
+	* creates and returns a string from the movies stored
 	* creates menus based upon the currently logged in user
 	**************/
 
@@ -174,8 +174,6 @@ class Page {
 		
 			$output .= "<h2 class='movietitle'>" . htmlentities($movie->getTitle()) . "</h2>";
 			$output .= "<div class='movie-item' data-watched-date='" . htmlentities($movie->getWDate()->format("Y-m-d H:i:s")) . "' data-movie-id='" . htmlentities($movie->getID()) . "'>";
-		
-			// Display movie poster and movie details in a flex container
 
 			$output .= "<div class='movie-content'>";
 			$output .= "<img class='movie-poster' src='" . htmlentities($movie->getPosterLink()) . "' alt='" . htmlentities($movie->getTitle()) . " Poster'>";
@@ -210,17 +208,16 @@ class Page {
 					$output .= "</ul>";
 				$menuItems = "";
 
-				// Check for "Edit" link condition
+				// Check for "Edit" 
 				if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
 					$menuItems .= "<li><button class='moviebutton'><a class='moviebuttontext' href='editreview.php?rid=" . $review->getRID() . "'>Edit</a></button></li>";
 				}
 				
-				// Check for "Delete" link condition
+				// Check for "Delete" 
 				if (($this->getStatus() && $this->getUser()->getUserLevel() >= 3) || ($this->getStatus() && $this->getUser()->getUserid() == $review->getAuthor()->getUserid())) {
 					$menuItems .= "<li><button class='moviebutton'><a class='moviebuttontext' href='deletereview.php?rid=" . $review->getRID() . "' onclick='return confirm(\"Do you want to delete this review?\");'>Delete</a></button></li>";
 				}
 				
-				// Only wrap in <ul> if at least one item exists
 				if (!empty($menuItems)) {
 					$output .= "<ul class='reviewmenu'>" . $menuItems . "</ul>";
 				}
@@ -242,7 +239,7 @@ class Page {
 	
 	
 	/*************
-	* creates and returns an array of information for each article including their comments
+	* creates and returns an array of information for each movie including their reviews
 	**************/
 	public function moviesToArray() {
 		$output=[];
@@ -283,7 +280,5 @@ class Page {
 		}
 		return $output;
 	}
-
-
 }
 ?>

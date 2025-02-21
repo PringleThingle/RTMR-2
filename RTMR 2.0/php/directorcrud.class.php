@@ -9,7 +9,7 @@ class DirectorCRUD {
 	}
 
 	/**************
-	* returns a users information from their $username
+	* returns a directors information from their name
 	**************/	
 	public function getDirectorByName($name, $style=MYSQLI_ASSOC) {
 		$this->sql="select * from directorInfo where directorName = ?";
@@ -22,7 +22,7 @@ class DirectorCRUD {
 	}
 	
 	/**************
-	* returns a users information from their $userid
+	* returns a directors information from their $directorid
 	**************/	
 	public function getDirectorByID($directorid, $style=MYSQLI_ASSOC) {
 		$this->sql="select * from directorInfo where directorID = ?";
@@ -34,6 +34,9 @@ class DirectorCRUD {
 		return $resultset;
 	}
 
+	/**************
+	* returns a directors name from a $movieid
+	**************/	
 	public function getDirectorNameByMovieID($movieid) {
 		$this->sql = "SELECT directorInfo.directorName 
 					  FROM directorInfo 
@@ -49,20 +52,18 @@ class DirectorCRUD {
 		$this->stmt->execute();
 		$result = $this->stmt->get_result();
 		
-		// Fetch the first row only
 		if ($row = $result->fetch_assoc()) {
-			return $row['directorName'];  // Return the director's name
+			return $row['directorName'];  
 		} else {
-			return "Unknown Director";  // Return a default value if no director is found
+			return "Unknown Director";  
 		}
 	}
 	
 	
 	
 	/**************
-	* stores a new user in the database including their username, firstname, surname, hashed password, email and date of birth
+	* stores a new director in the database including their ID from TMDB, name, DOB and birthplace
 	**************/	
-
 	public function storeNewDirector($directorid,$name,$dob,$birthplace) {
 		$this->sql="insert into directorInfo (directorID,directorName,directorDOB,directorBirthplace) values(?,?,?,?);";
 		$this->stmt = self::$db->prepare($this->sql);
@@ -80,7 +81,7 @@ class DirectorCRUD {
 	}	
 
 	/**************
-	* Returns a list of all users orders by username
+	* Returns a list of all directors ordered by their name
 	**************/	
 	public function getAllDirectors($orderby="directorName", $style=MYSQLI_ASSOC) {
 
@@ -100,17 +101,18 @@ class DirectorCRUD {
 		return $resultset;
 	}
 
+	/**************
+	* This function is used to store a new director if they don't exist
+	or to return an existing director if they already exist in the database
+	**************/	
 	public function getOrCreateDirector($directorid, $name, $dob = null, $birthplace = null) {
-		// Check if the director already exists
 		$existingDirector = $this->getDirectorByID($directorid);
 		
 		if (!empty($existingDirector)) {
-			// Director exists, return their ID
 			return $directorid;
 		}
 	
-		// Director does not exist, insert them
-		$result = $this->storeNewDirector($directorid, $name, $dob ?? 'Unknown', $birthplace ?? 'Unknown');
+		$result = $this->storeNewDirector($directorid ?? 0, $name ?? 'Unknown', $dob ?? '1990-1-1', $birthplace ?? 'Unknown');
 		
 		if ($result === 1) {
 			return $directorid;
@@ -119,6 +121,5 @@ class DirectorCRUD {
 		}
 	}
 	
-
 }
 ?>

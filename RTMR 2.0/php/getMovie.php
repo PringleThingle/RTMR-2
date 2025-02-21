@@ -9,10 +9,8 @@ if (!isset($_POST['lastWatchedDate']) || empty($_POST['lastWatchedDate'])) {
 }
 
 $lastWatchedDate = $_POST['lastWatchedDate'];
-error_log("Received lastWatchedDate: $lastWatchedDate");  // Log the received date for debugging
 
-// Fetch and display movies with a watchedDate less than the lastWatchedDate
-$movies = $page->getMovies($lastWatchedDate, 10, "PREV");  // Fetch the next 10 older movies
+$movies = $page->getMovies($lastWatchedDate, 10, "PREV");  
 if (!empty($movies)) {
     echo $page->displayMovies($movies);
 } else {

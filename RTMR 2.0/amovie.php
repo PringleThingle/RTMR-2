@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Movie</title>
-    <link rel="stylesheet" href="styles/style.css">
-</head>
-<body>
     <?php
     require_once("php/page.class.php");
     require_once("php/util.class.php");
@@ -18,7 +12,8 @@
     view::showHead($pagename);
     view::showHeader($pagename);
     ?>
-
+</head>
+<body>
     <nav>
         <ul class="navbar">
             <?php echo $page->getMenu(); ?>

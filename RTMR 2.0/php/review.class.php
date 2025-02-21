@@ -5,9 +5,8 @@ require_once("user.class.php");
 require_once("reviewcrud.class.php");
 require_once("util.class.php");
 
-
 /**************
-* Article class
+* Review class
 **************/
 class Review {
 	/***************
@@ -23,10 +22,10 @@ class Review {
 	private $reviews=[];
 	
 	/**************
-	* Creates a 'blank' comment, in this implementation comments are
-	* instantiated blank, then initialised using initComment
-	* initComment is called by one of the methods which work with
-	* the commentCRUD class. This has been done largely to cope with
+	* Creates a 'blank' review, in this implementation reviews are
+	* instantiated blank, then initialised using initReview
+	* initReview is called by one of the methods which work with
+	* the reviewCRUD class. This has been done largely to cope with
 	* PHP's inability to handle function overloading for constructors
 	**************/
 	public function __construct() {
@@ -39,12 +38,14 @@ class Review {
 	}
 	
 	/**************
-	* Setter for Comment ID
+	* Setters for Review & Movie ID
 	**************/
     private function setRID($rid){ $this->rid=$rid; }
 	private function setMID($mid){ $this->mid=$mid; }
 
-
+	/**************
+	* Setter for Review rating
+	**************/
 	private function setRating($rating) {$this->rating=util::sanFloat($rating);}
 	
 	/**************
@@ -52,7 +53,7 @@ class Review {
 	**************/	
 	private function setRDate($date) { 
 		$this->rdate=DateTime::createFromFormat("Y-m-d H:i:s", $date);
-		}
+	}
 		
 	/**************
 	* Setter for Author, accepts either an instance of User
@@ -77,12 +78,12 @@ class Review {
 	}
 	
 	/**************
-	* Setter for comment text, uses string sanitiser method
+	* Setter for review text, uses string sanitiser method
 	**************/
 	private function setText($text) {$this->rtext=util::sanStr($text);}
 	
 	/**************
-	* Remove all current comments in comments array
+	* Remove all current reviews in reviews array
 	**************/
 	public function clearReviews() {$this->reviews=[];}
 	
@@ -97,8 +98,8 @@ class Review {
 	public function getRating() { return $this->rating; }
 	
 	/**************
-	* Uses commentCRUD to retrieve a recordset of comments as an associative array
-	* instantiates Comment for each row and adds to the comments array
+	* Uses reviewCRUD to retrieve a recordset of reviews as an associative array
+	* instantiates Review for each row and adds to the reviews array
 	**************/
 	public function getReviewsForMovie($mid) {
         $havecomments=false;
@@ -114,7 +115,7 @@ class Review {
 	}
 
 	/**************
-	* returns a comment from a comment ID ($cid)
+	* returns a review from a review ID ($rid)
 	**************/	
 
     public function getReviewByID($rid) {
@@ -130,7 +131,7 @@ class Review {
     }
 	
 	/**************
-	* sets comment's attributes from a retrieved associative array of comments
+	* sets reviews attributes from a retrieved associative array of reviews
 	**************/
 	public function initReview($movie) {
 		$this->setRID($movie["reviewID"]);
@@ -142,11 +143,11 @@ class Review {
 	}
 	
 	/**************
-	* Accepts 3 input parameters to create a new Comment
+	* Accepts 4 input parameters to create a new Review
 	* Author is set using setAuthor, accepts an id or instance of author
-	* Calls commentCrud addComment and getLastUserComment to add new comment
-	* if successful comment ID and time set from database
-	* returns comment ID if successful, 0/false if unsuccessful with an
+	* Calls reviewCrud addReview and getLastUserReview to add new review
+	* if successful review ID and time set from database
+	* returns review ID if successful, 0/false if unsuccessful with an
 	* error message as an associative array
 	**************/	
 public function addReview($author, $text, $movieID, $rating) {
@@ -215,7 +216,7 @@ public function addReview($author, $text, $movieID, $rating) {
 	}
 		
 	/**************
-	* deletes a comment based on a comment ID ($cid)
+	* deletes a review based on a review ID ($rid)
 	**************/	
 	public function deleteReview($rid) {
 		$messages = "";
@@ -236,7 +237,7 @@ public function addReview($author, $text, $movieID, $rating) {
 
 
 	/**************
-	* returns comments in an array, for use when formatting an article into an array
+	* returns reviews in an array, for use when formatting a movie into an array
 	**************/	
 	public function toArray() {
 		$reviews=[];
